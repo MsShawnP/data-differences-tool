@@ -1,6 +1,8 @@
 @import "tailwindcss";
 
 @theme {
+  --font-serif: "Playfair Display Variable", Georgia, "Times New Roman", serif;
+  --font-sans: "Source Sans 3 Variable", "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --color-background: #f8f6f1;
   --color-text-primary: #2a2a2a;
   --color-text-secondary: #6b6b6b;

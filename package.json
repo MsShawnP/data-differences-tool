@@ -11,6 +11,8 @@
     "deploy": "npm run build && npx wrangler pages deploy dist"
   },
   "dependencies": {
+    "@fontsource-variable/playfair-display": "^5.2.8",
+    "@fontsource-variable/source-sans-3": "^5.2.9",
     "dayjs": "^1.11.20",
     "exceljs": "^4.4.0",
     "react": "^19.0.0",

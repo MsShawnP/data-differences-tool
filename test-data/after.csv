@@ -1,0 +1,6 @@
+id,name,email,amount,department
+1,Alice Smith,alice@example.com,120.00,Engineering
+2,Bob Jones,bob@newmail.com,250.50,Sales
+3,Charlie Brown,charlie@example.com,75.00,Marketing
+5,Eve Wilson,eve@example.com,150.25,Engineering
+6,Frank Miller,frank@example.com,200.00,Operations

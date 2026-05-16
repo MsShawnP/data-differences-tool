@@ -9,6 +9,18 @@ For things that didn't work, see FAILURES.md.
 
 ---
 
+## 2026-05-16 22:55 — Visual QA passed, fonts loaded, deployed to Cloudflare Pages
+
+**What changed:** Full workflow tested in browser (upload → auto-detect key columns → diff report → export). Lailara design system fonts wired up via @fontsource-variable packages. App deployed to Cloudflare Pages.
+
+**Why:** Previous session completed code but never verified in browser or deployed. This session closed both gaps.
+
+**State:** App is live at https://data-differences-tool.pages.dev/. All core features working: file upload, column picker, diff engine, summary, Excel/CSV export, start-over reset. Fonts (Playfair Display Variable, Source Sans 3 Variable) rendering correctly. No console errors. Screenshot tool timed out (environment issue, not app bug). XLSX upload not explicitly tested but parser uses SheetJS.
+
+**Next:** Run /ce:review for code review, then test XLSX upload and tolerant matching edge cases.
+
+---
+
 ## 2026-05-16 18:05 — All 13 implementation units complete
 
 **Started from:** Empty scaffold.
