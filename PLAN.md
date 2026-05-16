@@ -7,44 +7,70 @@ session. For session-by-session state, see HANDOFF.md.
 
 ## Goal
 
-[One sentence — what "done" looks like for this arc.]
+Ship a deployed web app where users upload two tabular files (CSV/XLSX),
+pick key columns, and get a readable diff report — with tolerant matching
+for real-world dirty data.
 
 ## Why this arc, why now
 
-[One or two sentences. The reason matters when you come back in three
-weeks and wonder why this was the priority.]
+Universal pain point with no good existing tool at the consultant-grade
+level. Directly demonstrates Lailara's data quality pitch. Users are
+people Shawn hands the link to — it needs to work immediately and be
+worth using.
 
 ## Business question this arc answers
 
-[One sentence. Direct connection to the project-level business question
-in CLAUDE.md.]
+What specifically changed between these two versions of this data,
+explained in plain language anyone can act on?
+
+## Scope (from /clarify — 2026-05-16)
+
+**In scope (v1):**
+- Single-page web app, no auth, no persistence
+- Upload two files: CSV or XLSX
+- Interactive key column picker + auto-detect option
+- Row-level diff: added, removed, modified (with before/after values)
+- Column-level diff: added, removed, renamed (heuristic), reordered
+- Tolerant matching: whitespace normalization, numeric equivalence,
+  leading zeros, date format normalization, case-insensitive option
+- Mismatched schemas: flag column differences, diff the overlap
+- Template-based summary paragraph (no LLM)
+- In-browser readable report
+- Download: Excel (primary), CSV (secondary)
+- Self-explanatory page with instructions
+- Deploy to Cloudflare Pages
+
+**Out of scope (v1):**
+- Auth / user accounts / persistence
+- LLM-generated summaries
+- CLI interface
+- Three-way merge / conflict resolution
+- Database-to-database diff
+- Visual side-by-side diff panels
+- Diffing unstructured fields (JSON blobs in cells)
+- Schema migration generation
+- Saved configs / scheduled diffs
 
 ## Tasks
 
-Work in vertical slices — one section/feature end-to-end before moving
-to the next. Visualizations get reviewed in their own slice, not
-deferred to a polish phase.
-
-- [ ] Specific, scoped, actionable
-- [ ] Each one is a thing Claude Code could plausibly finish in one
-      session
-- [ ] If a task feels too big, break it down before adding it
-- [x] Completed items stay struck or checked, so the trail is visible
-
-## Out of scope for this arc
-
-- Things explicitly NOT being done in this round
-- Captures the decisions about what to defer
-- Prevents scope creep mid-session
+[To be filled during /ce:brainstorm and /ce:plan]
 
 ## Definition of done for this arc
 
-- [ ] Specific, verifiable conditions
-- [ ] Not "the prose is better" — "every section's executive summary
-      has been reviewed and either approved or marked for domain
-      insertion"
-- [ ] When all of these are checked, the arc is done and a new PLAN.md
-      arc gets defined
+- [ ] App deployed to Cloudflare Pages
+- [ ] Can upload two CSV files and see correct diff report
+- [ ] Can upload two XLSX files and see correct diff report
+- [ ] Can upload one CSV + one XLSX and diff them
+- [ ] Interactive key column picker works
+- [ ] Auto-detect key column works with clear indication of what it chose
+- [ ] Tolerant matching handles: whitespace, 12.00 vs 12, leading zeros,
+      date formats
+- [ ] Mismatched columns flagged correctly
+- [ ] Template summary paragraph is accurate
+- [ ] Excel download works and is usable
+- [ ] CSV download works
+- [ ] Page is self-explanatory to non-technical user
+- [ ] Worth handing someone a link to
 
 ---
 
