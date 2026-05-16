@@ -11,8 +11,10 @@
     "deploy": "npm run build && npx wrangler pages deploy dist"
   },
   "dependencies": {
+    "dayjs": "^1.11.20",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.0",
