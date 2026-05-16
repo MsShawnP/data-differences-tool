@@ -9,6 +9,18 @@ For things that didn't work, see FAILURES.md.
 
 ---
 
+## 2026-05-16 19:18
+
+**What changed:** Fixed all 16 code review findings — correctness, type safety, UX, and state management across 12 files.
+
+**Why:** /ce:review found P0–P3 issues: differ skipped renamed columns, duplicate keys were silent, RowChange type was unsafe, pagination missing, no error boundary. All needed fixing before the code is shippable.
+
+**State:** App deployed and verified. All 70 tests pass, TypeScript clean, browser workflow correct (upload → auto-detect → diff → export). Branch `claude/wizardly-vaughan-4afe26` has fixes committed but not yet merged to main.
+
+**Next:** Push branch and merge to main. Then check PLAN.md definition-of-done items (XLSX upload testing, tolerant matching edge cases).
+
+---
+
 ## 2026-05-16 22:55 — Visual QA passed, fonts loaded, deployed to Cloudflare Pages
 
 **Started from:** Code feature-complete (13 units, 70 tests) but never browser-tested or deployed. Fonts not loaded.
