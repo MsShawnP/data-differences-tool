@@ -42,6 +42,11 @@ Each entry:
 - **Scope:** `src/lib/column-detector.ts`
 - **Threshold:** combined score > 0.7 (40% name + 60% content)
 
+### 2026-05-16 — Self-host fonts via @fontsource-variable packages
+- **Why:** Lailara design system requires self-hosted fonts (no CDN). Fontsource bundles woff2 into the build output, one import per font, variable font support built in.
+- **Scope:** All Lailara projects needing Playfair Display or Source Sans 3
+- **Do not:** Use Google Fonts CDN links or manually manage woff2 files when fontsource packages exist
+
 ---
 
 ## Data & Schema

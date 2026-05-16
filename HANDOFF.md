@@ -11,13 +11,17 @@ For things that didn't work, see FAILURES.md.
 
 ## 2026-05-16 22:55 — Visual QA passed, fonts loaded, deployed to Cloudflare Pages
 
-**What changed:** Full workflow tested in browser (upload → auto-detect key columns → diff report → export). Lailara design system fonts wired up via @fontsource-variable packages. App deployed to Cloudflare Pages.
+**Started from:** Code feature-complete (13 units, 70 tests) but never browser-tested or deployed. Fonts not loaded.
 
-**Why:** Previous session completed code but never verified in browser or deployed. This session closed both gaps.
+**Did:**
+- Full visual QA: upload → auto-detect key columns → diff → expanded rows → export → reset
+- Installed @fontsource-variable packages for Playfair Display + Source Sans 3
+- Authenticated with Cloudflare, created Pages project, deployed
+- Live at https://data-differences-tool.pages.dev/
 
-**State:** App is live at https://data-differences-tool.pages.dev/. All core features working: file upload, column picker, diff engine, summary, Excel/CSV export, start-over reset. Fonts (Playfair Display Variable, Source Sans 3 Variable) rendering correctly. No console errors. Screenshot tool timed out (environment issue, not app bug). XLSX upload not explicitly tested but parser uses SheetJS.
+**State:** App deployed and fully functional. All core features verified, fonts rendering correctly, zero console errors. XLSX upload and tolerant matching edge cases not explicitly tested yet.
 
-**Next:** Run /ce:review for code review, then test XLSX upload and tolerant matching edge cases.
+**Next:** Run /ce:review for code review. Test XLSX upload and tolerant matching (whitespace, numeric equivalence, leading zeros, date formats). Check definition-of-done items in PLAN.md.
 
 ---
 
