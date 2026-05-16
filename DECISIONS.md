@@ -24,6 +24,24 @@ Each entry:
 - **Scope:** Global
 - **Do not:** Build a CLI-first tool with a web wrapper bolted on later.
 
+### 2026-05-16 — React 19 + Vite + Tailwind v4 + Cloudflare Pages
+- **Why:** Modern stack, fast builds, zero-config Tailwind v4, Pages gives free hosting with no traffic-based billing.
+- **Scope:** Global
+- **Do not:** Add Next.js or server-side rendering — this is a pure SPA.
+
+### 2026-05-16 — SheetJS for reading, ExcelJS for writing
+- **Why:** SheetJS free reads CSV/XLSX well but can't style output cells. ExcelJS provides cell highlighting (green/red/yellow) needed for usable Excel downloads.
+- **Scope:** File parsing + export modules
+
+### 2026-05-16 — Custom diff engine over daff library
+- **Why:** Need full control over normalization pipeline (numeric tolerance, date unification, leading zeros). daff doesn't support configurable tolerant matching.
+- **Scope:** `src/lib/differ.ts`
+
+### 2026-05-16 — Levenshtein + Jaccard for column rename detection
+- **Why:** Pure name similarity misses renames when names change significantly (employee_name → emp_name). Content similarity (60% weight) catches renames based on overlapping values.
+- **Scope:** `src/lib/column-detector.ts`
+- **Threshold:** combined score > 0.7 (40% name + 60% content)
+
 ---
 
 ## Data & Schema
