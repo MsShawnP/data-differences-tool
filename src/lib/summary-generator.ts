@@ -42,7 +42,7 @@ function getChangedColumns(
 ): string[] {
   const columns = new Set<string>();
   for (const row of rowChanges) {
-    if (row.type === "modified" && row.changes) {
+    if (row.type === "modified") {
       for (const change of row.changes) {
         columns.add(change.column);
       }
@@ -51,10 +51,16 @@ function getChangedColumns(
   return Array.from(columns);
 }
 
+interface Transition {
+  from: string;
+  to: string;
+  count: number;
+}
+
 interface ChangePattern {
   column: string;
   count: number;
-  topTransition?: { from: string; to: string; count: number };
+  topTransition?: Transition;
 }
 
 function detectMostCommonChange(
@@ -64,19 +70,25 @@ function detectMostCommonChange(
   if (modifiedRows.length === 0) return null;
 
   const columnCounts = new Map<string, number>();
-  const transitionCounts = new Map<string, Map<string, number>>();
+  const transitionCounts = new Map<string, Transition[]>();
 
   for (const row of modifiedRows) {
-    if (!row.changes) continue;
+    if (row.type !== "modified") continue;
     for (const change of row.changes) {
       columnCounts.set(change.column, (columnCounts.get(change.column) ?? 0) + 1);
 
-      const key = `${String(change.oldValue ?? "")} → ${String(change.newValue ?? "")}`;
       if (!transitionCounts.has(change.column)) {
-        transitionCounts.set(change.column, new Map());
+        transitionCounts.set(change.column, []);
       }
-      const colTransitions = transitionCounts.get(change.column)!;
-      colTransitions.set(key, (colTransitions.get(key) ?? 0) + 1);
+      const transitions = transitionCounts.get(change.column)!;
+      const from = String(change.oldValue ?? "");
+      const to = String(change.newValue ?? "");
+      const existing = transitions.find((t) => t.from === from && t.to === to);
+      if (existing) {
+        existing.count++;
+      } else {
+        transitions.push({ from, to, count: 1 });
+      }
     }
   }
 
@@ -85,18 +97,13 @@ function detectMostCommonChange(
   const sorted = Array.from(columnCounts.entries()).sort((a, b) => b[1] - a[1]);
   const [topColumn, topCount] = sorted[0]!;
 
-  const colTransitions = transitionCounts.get(topColumn);
+  const transitions = transitionCounts.get(topColumn);
   let pattern: ChangePattern = { column: topColumn, count: topCount };
 
-  if (colTransitions) {
-    const topTransitionEntry = Array.from(colTransitions.entries()).sort(
-      (a, b) => b[1] - a[1]
-    )[0];
-
-    if (topTransitionEntry && topTransitionEntry[1] >= 2) {
-      const [transition, count] = topTransitionEntry;
-      const [from, to] = transition.split(" → ");
-      pattern.topTransition = { from: from!, to: to!, count };
+  if (transitions && transitions.length > 0) {
+    const topTransition = transitions.sort((a, b) => b.count - a.count)[0]!;
+    if (topTransition.count >= 2) {
+      pattern.topTransition = topTransition;
     }
   }
 

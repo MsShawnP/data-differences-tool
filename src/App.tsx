@@ -1,6 +1,7 @@
 import { FileUpload } from "@/components/FileUpload";
 import { ColumnPicker } from "@/components/ColumnPicker";
 import { DiffReport } from "@/components/DiffReport";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { useDiffWorkflow } from "@/hooks/use-diff-workflow";
 
 export default function App() {
@@ -8,6 +9,7 @@ export default function App() {
     useDiffWorkflow();
 
   return (
+    <ErrorBoundary>
     <div className="min-h-screen bg-background text-text-primary">
       <div className="mx-auto max-w-[900px] px-6 py-12">
         <header className="mb-12">
@@ -69,5 +71,6 @@ export default function App() {
         </main>
       </div>
     </div>
+    </ErrorBoundary>
   );
 }

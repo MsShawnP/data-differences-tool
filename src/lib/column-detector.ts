@@ -168,7 +168,6 @@ export function buildColumnChanges(mapping: ColumnMapping, fileA: ParsedFile, fi
   if (mapping.reordered) {
     changes.push({
       type: "reordered",
-      columnName: "(columns reordered)",
       details: {
         oldIndex: indexMapA.get(fileA.columns[0]?.name ?? "") ?? 0,
         newIndex: indexMapB.get(fileB.columns[0]?.name ?? "") ?? 0,

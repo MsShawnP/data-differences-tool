@@ -24,6 +24,14 @@ export function DiffReport({ result, onStartOver }: DiffReportProps) {
         </button>
       </div>
 
+      {result.warnings.length > 0 && (
+        <div className="rounded-sm border border-amber/30 bg-amber/5 p-4">
+          {result.warnings.map((w, i) => (
+            <p key={i} className="text-sm text-amber">{w}</p>
+          ))}
+        </div>
+      )}
+
       <DiffSummary result={result} />
       <ColumnChanges changes={result.columnChanges} />
       <RowChanges changes={result.rowChanges} keyColumns={result.keyColumnsUsed} />

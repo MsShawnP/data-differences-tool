@@ -1,6 +1,8 @@
-import { useReducer, useCallback } from "react";
+import { useReducer, useCallback, useEffect } from "react";
 import type { DiffConfig, DiffResult, ParsedFile, WorkflowState, WorkflowStep } from "@/types";
 import { computeDiff } from "@/lib/differ";
+
+const DEFAULT_NUMERIC_TOLERANCE = 1e-9;
 
 type Action =
   | { type: "SET_FILE_A"; payload: ParsedFile }
@@ -21,18 +23,18 @@ function getStep(state: Omit<WorkflowState, "step">): WorkflowStep {
 function reducer(state: WorkflowState, action: Action): WorkflowState {
   switch (action.type) {
     case "SET_FILE_A": {
-      const next = { ...state, fileA: action.payload, error: null };
+      const next = { ...state, fileA: action.payload, error: null, result: null, config: null };
       return { ...next, step: getStep(next) };
     }
     case "SET_FILE_B": {
-      const next = { ...state, fileB: action.payload, error: null };
+      const next = { ...state, fileB: action.payload, error: null, result: null, config: null };
       return { ...next, step: getStep(next) };
     }
     case "START_COMPARE": {
       const config: DiffConfig = {
         keyColumns: action.payload.keyColumns,
         caseSensitive: action.payload.caseSensitive,
-        numericTolerance: 1e-9,
+        numericTolerance: DEFAULT_NUMERIC_TOLERANCE,
       };
       return { ...state, config, step: "computing", error: null };
     }
@@ -71,26 +73,24 @@ export function useDiffWorkflow() {
   const startCompare = useCallback(
     (keyColumns: string[], caseSensitive: boolean) => {
       if (!state.fileA || !state.fileB) return;
-
       dispatch({ type: "START_COMPARE", payload: { keyColumns, caseSensitive } });
-
-      try {
-        const config: DiffConfig = {
-          keyColumns,
-          caseSensitive,
-          numericTolerance: 1e-9,
-        };
-        const result = computeDiff(state.fileA, state.fileB, config);
-        dispatch({ type: "DIFF_COMPLETE", payload: result });
-      } catch (err) {
-        dispatch({
-          type: "ERROR",
-          payload: err instanceof Error ? err.message : "Diff computation failed.",
-        });
-      }
     },
     [state.fileA, state.fileB]
   );
+
+  useEffect(() => {
+    if (state.step !== "computing" || !state.fileA || !state.fileB || !state.config) return;
+
+    try {
+      const result = computeDiff(state.fileA, state.fileB, state.config);
+      dispatch({ type: "DIFF_COMPLETE", payload: result });
+    } catch (err) {
+      dispatch({
+        type: "ERROR",
+        payload: err instanceof Error ? err.message : "Diff computation failed.",
+      });
+    }
+  }, [state.step, state.fileA, state.fileB, state.config]);
 
   const setError = useCallback((error: string) => {
     dispatch({ type: "ERROR", payload: error });

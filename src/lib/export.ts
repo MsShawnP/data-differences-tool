@@ -20,7 +20,7 @@ function buildExportRows(result: DiffResult): ExportRow[] {
       rows.push({ key, changeType: "Added", column: "", oldValue: "", newValue: "" });
     } else if (change.type === "removed") {
       rows.push({ key, changeType: "Removed", column: "", oldValue: "", newValue: "" });
-    } else if (change.type === "modified" && change.changes) {
+    } else if (change.type === "modified") {
       for (const cell of change.changes) {
         rows.push({
           key,

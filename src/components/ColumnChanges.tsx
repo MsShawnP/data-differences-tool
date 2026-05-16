@@ -26,6 +26,8 @@ export function ColumnChanges({ changes }: ColumnChangesProps) {
                     ({Math.round((change.details.confidence ?? 0) * 100)}% match)
                   </span>
                 </>
+              ) : change.type === "reordered" ? (
+                <span className="font-medium">Columns reordered</span>
               ) : (
                 <span className="font-medium">{change.columnName}</span>
               )}

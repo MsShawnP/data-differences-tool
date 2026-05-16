@@ -24,7 +24,7 @@ export type ColumnChangeType = "added" | "removed" | "renamed" | "reordered";
 
 export interface ColumnChange {
   type: ColumnChangeType;
-  columnName: string;
+  columnName?: string;
   details?: {
     oldName?: string;
     newName?: string;
@@ -41,11 +41,24 @@ export interface CellDiff {
   wasNormalized: boolean;
 }
 
-export interface RowChange {
-  type: "added" | "removed" | "modified";
+export type RowChange = AddedRow | RemovedRow | ModifiedRow;
+
+interface BaseRow {
   keyValues: Record<string, unknown>;
   rowIndex: number;
-  changes?: CellDiff[];
+}
+
+export interface AddedRow extends BaseRow {
+  type: "added";
+}
+
+export interface RemovedRow extends BaseRow {
+  type: "removed";
+}
+
+export interface ModifiedRow extends BaseRow {
+  type: "modified";
+  changes: CellDiff[];
 }
 
 export interface DiffResult {
@@ -61,6 +74,7 @@ export interface DiffResult {
   rowChanges: RowChange[];
   keyColumnsUsed: string[];
   config: DiffConfig;
+  warnings: string[];
 }
 
 export type WorkflowStep =

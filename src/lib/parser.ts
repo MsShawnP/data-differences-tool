@@ -57,7 +57,7 @@ function detectColumns(sheet: XLSX.WorkSheet): ColumnMetadata[] {
     for (let row = range.s.r + 1; row <= maxScanRows; row++) {
       const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
       const cell = sheet[cellAddress] as
-        | { t: string; z?: string }
+        | { t: "b" | "e" | "n" | "d" | "s" | "z"; z?: string }
         | undefined;
 
       if (!cell) continue;
