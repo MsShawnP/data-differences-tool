@@ -57,7 +57,7 @@ explained in plain language anyone can act on?
 
 ## Definition of done for this arc
 
-- [ ] App deployed to Cloudflare Pages
+- [x] App deployed to Cloudflare Pages
 - [ ] Can upload two CSV files and see correct diff report
 - [ ] Can upload two XLSX files and see correct diff report
 - [ ] Can upload one CSV + one XLSX and diff them

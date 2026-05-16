@@ -47,6 +47,11 @@ Each entry:
 - **Scope:** All Lailara projects needing Playfair Display or Source Sans 3
 - **Do not:** Use Google Fonts CDN links or manually manage woff2 files when fontsource packages exist
 
+### 2026-05-16 — Use discriminated unions for RowChange types, not optional properties
+- **Why:** Optional `changes` property on a shared interface allowed unsafe access without narrowing. Discriminated union (AddedRow | RemovedRow | ModifiedRow) makes the compiler enforce correct property access per type.
+- **Scope:** `src/types/index.ts`, any code consuming RowChange
+- **Do not:** Add new row-change variants as optional properties on a base interface.
+
 ---
 
 ## Data & Schema

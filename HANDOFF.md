@@ -9,6 +9,18 @@ For things that didn't work, see FAILURES.md.
 
 ---
 
+## 2026-05-16 19:49
+
+**Started from:** App deployed but not code-reviewed.
+
+**Did:** Ran /ce:review (10 reviewers), fixed all 16 findings (P0–P3), merged to main, redeployed to Cloudflare Pages.
+
+**State:** App live at https://data-differences-tool.pages.dev/ with all fixes. 70 tests pass, TypeScript clean. PLAN.md definition-of-done items not yet checked off (XLSX, tolerant matching, mixed format).
+
+**Next:** Test XLSX upload and tolerant matching edge cases. Check off definition-of-done items. Add tests for renamed-column diffing path.
+
+---
+
 ## 2026-05-16 19:18
 
 **What changed:** Fixed all 16 code review findings — correctness, type safety, UX, and state management across 12 files.
