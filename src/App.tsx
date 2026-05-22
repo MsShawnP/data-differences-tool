@@ -19,6 +19,11 @@ export default function App() {
           <p className="mt-2 text-lg text-text-secondary">
             Upload two spreadsheets and see exactly what changed.
           </p>
+          {state.step === "idle" && (
+            <p className="mt-3 text-sm text-text-secondary">
+              Upload the old and new versions of your file. We'll detect the key column automatically, compare every row, and show you what was added, removed, or modified — with before/after values. CSV and XLSX up to 50 MB.
+            </p>
+          )}
         </header>
 
         <main className="space-y-8">

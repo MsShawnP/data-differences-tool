@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { ParsedFile } from "@/types";
 import { detectKeyColumns } from "@/lib/column-detector";
 
@@ -14,6 +14,10 @@ export function ColumnPicker({ fileA, fileB, onCompare }: ColumnPickerProps) {
   const [autoDetectMsg, setAutoDetectMsg] = useState<string | null>(null);
 
   const allColumns = fileA.columns.map((c) => c.name);
+
+  useEffect(() => {
+    handleAutoDetect();
+  }, []);
 
   function handleAutoDetect() {
     const result = detectKeyColumns(fileA, fileB);
@@ -50,8 +54,8 @@ export function ColumnPicker({ fileA, fileB, onCompare }: ColumnPickerProps) {
           Select Key Columns
         </h2>
         <p className="mt-1 text-sm text-text-secondary">
-          Key columns uniquely identify each row. Select one or more columns
-          that act as the row ID.
+          Which column is the unique ID for each row? (e.g., Employee ID, Invoice Number, SKU.)
+          We've auto-detected one below — change it if needed, then click Compare.
         </p>
       </div>
 
