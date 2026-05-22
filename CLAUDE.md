@@ -33,6 +33,7 @@ Tier: Medium
 - HANDOFF.md — current session state
 - PLAN.md — current work arc
 - FAILURES.md — things tried that didn't work
+- docs/solutions/ — searchable solution docs (written by /ce:compound)
 
 Read PLAN.md and HANDOFF.md at session start. DECISIONS.md and
 FAILURES.md as relevant.

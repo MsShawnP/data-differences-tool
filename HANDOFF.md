@@ -9,6 +9,18 @@ For things that didn't work, see FAILURES.md.
 
 ---
 
+## 2026-05-22 16:30
+
+**Started from:** App deployed with /improve fixes. Needed to evaluate subjective definition-of-done items and close the v1.0 arc.
+
+**Did:** Evaluated UX, added auto-detect key column on mount + explanatory copy, redeployed, checked off all 12/12 items, archived v1.0 arc, ran /ce:compound (first solution doc written to docs/solutions/bugs/).
+
+**State:** v1.0 complete. Live at https://data-differences-tool.pages.dev/. 70 tests, 297KB bundle. No active arc.
+
+**Next:** No active work arc. Options: start v1.1 arc, run /improve audit-only when due (2026-06-19), or move to a different project.
+
+---
+
 ## 2026-05-22 16:00
 
 **Started from:** App deployed but definition-of-done items unverified.
