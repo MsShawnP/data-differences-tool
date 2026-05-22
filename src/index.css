@@ -3,15 +3,15 @@
 @theme {
   --font-serif: "Playfair Display Variable", Georgia, "Times New Roman", serif;
   --font-sans: "Source Sans 3 Variable", "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --color-background: #f8f6f1;
-  --color-text-primary: #2a2a2a;
-  --color-text-secondary: #6b6b6b;
-  --color-border: #d8d4c8;
-  --color-navy: #1b3a5c;
-  --color-navy-hover: #14304b;
-  --color-steel-blue: #4a7ba7;
-  --color-red: #c54b4b;
-  --color-green: #2d7a4f;
-  --color-amber: #b8860b;
-  --color-warm-gray: #8c7d6d;
+  --color-background: #f5f3ee;
+  --color-text-primary: #333333;
+  --color-text-secondary: #595959;
+  --color-border: #d9d9d9;
+  --color-navy: #1f2e7a;
+  --color-navy-hover: #141e52;
+  --color-steel-blue: #8e9ad0;
+  --color-red: #cc100a;
+  --color-green: #158f75;
+  --color-amber: #ee8a2a;
+  --color-warm-gray: #666666;
 }

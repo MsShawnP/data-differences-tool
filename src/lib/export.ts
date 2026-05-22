@@ -87,17 +87,17 @@ export async function exportToExcel(result: DiffResult): Promise<Blob> {
   const greenFill: ExcelJSType.FillPattern = {
     type: "pattern",
     pattern: "solid",
-    fgColor: { argb: "FFD4EDDA" },
+    fgColor: { argb: "FFE4F5F0" },
   };
   const redFill: ExcelJSType.FillPattern = {
     type: "pattern",
     pattern: "solid",
-    fgColor: { argb: "FFF8D7DA" },
+    fgColor: { argb: "FFFCE8E7" },
   };
   const yellowFill: ExcelJSType.FillPattern = {
     type: "pattern",
     pattern: "solid",
-    fgColor: { argb: "FFFFF3CD" },
+    fgColor: { argb: "FFFDEEE0" },
   };
 
   for (const row of exportRows) {
