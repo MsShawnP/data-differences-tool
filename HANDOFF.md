@@ -9,6 +9,18 @@ For things that didn't work, see FAILURES.md.
 
 ---
 
+## 2026-05-22 16:00
+
+**Started from:** App deployed but definition-of-done items unverified.
+
+**Did:** Tested all features (CSV, XLSX, mixed, tolerant matching, downloads, mismatched columns). Fixed date normalization bug. Ran first /improve pass: fixed 8 findings (Excel serial offset, file size limit, row cap, magic-byte validation, code-splitting, error boundary, README, SheetJS docs). Redeployed.
+
+**State:** All functional features verified. Live at https://data-differences-tool.pages.dev/. 70 tests pass, 297KB initial bundle. 10/12 definition-of-done checked. Need to redeploy with /improve fixes.
+
+**Next:** Redeploy with /improve fixes. Evaluate two subjective items ("self-explanatory", "worth sharing"). If satisfied, mark arc complete. Run /ce:compound.
+
+---
+
 ## 2026-05-22 15:45
 
 **Started from:** App deployed and code-reviewed but definition-of-done items not verified.

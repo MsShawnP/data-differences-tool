@@ -31,6 +31,20 @@ quarto" or "scope, scrollytelling, decoration"]
 
 ## Entries
 
+### 2026-05-22 — Excel serial date offset wrong since initial build, masked by self-referencing tests
+
+**Attempted:** Used offset 25570 in `excelSerialToISO` to convert Excel date serial numbers to ISO date strings. Wrote tests that verified the output matched expectations.
+
+**Why it didn't work:** The correct offset is 25569. Every XLSX date serial was off by one day. The tests passed because they were written by running the buggy code and using its output as the expected value — a circular validation. The bug was only caught by the /improve security audit which tested against a known external reference (Excel serial 44927 = Jan 1, 2023).
+
+**What we tried instead:** Fixed offset to 25569, updated tests to use correct serial values (45306 = Jan 15, 2024 instead of 45307).
+
+**Status:** Resolved
+
+**Tags:** testing, excel, dates, circular-validation, offset
+
+---
+
 ### 2026-05-22 — Date normalization with local time methods gives wrong day for UTC-parsed dates
 
 **Attempted:** Fixed Date object normalization in `normalizer.ts` using `getFullYear()`/`getMonth()`/`getDate()` (local time methods) to extract calendar date from SheetJS Date objects.

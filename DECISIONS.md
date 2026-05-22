@@ -57,6 +57,11 @@ Each entry:
 - **Scope:** `src/lib/normalizer.ts` and `src/lib/parser.ts`
 - **Do not:** Switch to local time methods or disable `cellDates` without handling the column detection gap.
 
+### 2026-05-22 — Lazy-load SheetJS and ExcelJS via dynamic import()
+- **Why:** Both libraries are 400KB–940KB. Static imports produced a 1.5MB initial bundle. Dynamic imports reduce the shell to 297KB — the app loads instantly and heavy parsing/export code loads on first use.
+- **Scope:** `src/lib/parser.ts`, `src/lib/export.ts`
+- **Do not:** Move these back to static imports without a compelling reason (e.g., if bundle analysis shows the lazy loading adds meaningful latency to the first file upload).
+
 ### 2026-05-22 — Accept SheetJS (xlsx) npm vulnerabilities for v1
 - **Why:** The community edition on npm is abandoned with no fix. Replacing it requires a significant refactor (it handles CSV parsing, XLSX parsing, column type detection, date conversion). The vulnerabilities (prototype pollution, ReDoS) are client-side only — blast radius is the uploading user's own browser tab. Users upload their own files, so the attack vector requires self-exploitation or social engineering.
 - **Scope:** `src/lib/parser.ts`, dependency `xlsx`
