@@ -69,8 +69,8 @@ explained in plain language anyone can act on?
 - [x] Template summary paragraph is accurate
 - [x] Excel download works and is usable
 - [x] CSV download works
-- [ ] Page is self-explanatory to non-technical user
-- [ ] Worth handing someone a link to
+- [x] Page is self-explanatory to non-technical user
+- [x] Worth handing someone a link to
 
 ---
 
