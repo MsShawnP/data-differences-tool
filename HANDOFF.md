@@ -9,6 +9,18 @@ For things that didn't work, see FAILURES.md.
 
 ---
 
+## 2026-05-22 15:28
+
+**What changed:** Fixed date normalization bug — added UTC-based Date object handler in normalizer.ts. Tested all tolerant matching features in browser.
+
+**Why:** SheetJS parses ISO dates as UTC and slash dates as local time, causing identical calendar dates to show as different. Broke tolerant matching for date format normalization.
+
+**State:** All features verified via browser testing: CSV upload, auto-detect key, diff report, row expansion, tolerant matching (whitespace, numeric, leading zeros, dates). 70 tests pass. XLSX upload and file download not yet tested with real files.
+
+**Next:** Test XLSX file upload manually. Test Excel/CSV download. Check off PLAN.md definition-of-done items.
+
+---
+
 ## 2026-05-16 19:49
 
 **Started from:** App deployed but not code-reviewed.

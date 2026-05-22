@@ -54,6 +54,16 @@ function normalizeDate(value: unknown): string {
     return excelSerialToISO(value);
   }
 
+  // Handle Date objects (from SheetJS cellDates or user-provided data).
+  // Use UTC to avoid timezone shifts from SheetJS inconsistent parsing.
+  if (value instanceof Date) {
+    if (Number.isNaN(value.getTime())) return "";
+    const year = value.getUTCFullYear();
+    const month = String(value.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(value.getUTCDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
+
   const str = String(value).trim();
   if (str === "") return "";
 
