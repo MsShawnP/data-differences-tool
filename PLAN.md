@@ -80,9 +80,9 @@ When an arc completes, archive its goal, completion date, and outcome
 here. Then start a new arc above. Provides continuity without bloating
 the active plan.
 
-### [Date completed] — [Goal]
-- Outcome: [what shipped or what was decided]
-- Tag: [git tag if one was created]
+### 2026-05-22 — Ship a deployed tabular diff web app
+- Outcome: All 12 definition-of-done items complete. App live at https://data-differences-tool.pages.dev/. First /improve pass completed (8 fixes). 70 tests, 297KB initial bundle.
+- Tag: v1.0
 
 ---
 
