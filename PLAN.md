@@ -65,7 +65,7 @@ explained in plain language anyone can act on?
 - [x] Auto-detect key column works with clear indication of what it chose
 - [x] Tolerant matching handles: whitespace, 12.00 vs 12, leading zeros,
       date formats
-- [ ] Mismatched columns flagged correctly
+- [x] Mismatched columns flagged correctly
 - [x] Template summary paragraph is accurate
 - [x] Excel download works and is usable
 - [x] CSV download works

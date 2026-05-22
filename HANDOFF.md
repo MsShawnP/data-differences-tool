@@ -9,6 +9,18 @@ For things that didn't work, see FAILURES.md.
 
 ---
 
+## 2026-05-22 15:40
+
+**What changed:** Verified mismatched columns (added/removed/renamed all flagged correctly). Redeployed to Cloudflare Pages with date normalization fix. 10/12 definition-of-done items checked off.
+
+**Why:** Completing feature verification and shipping the date fix to production.
+
+**State:** Live at https://data-differences-tool.pages.dev/ with all fixes. Remaining unchecked items are subjective (self-explanatory page, worth sharing). All functional features verified.
+
+**Next:** Evaluate the two subjective definition-of-done items. Consider running /improve or /ce:compound.
+
+---
+
 ## 2026-05-22 15:35
 
 **What changed:** Verified all major features — XLSX upload, mixed format diff, Excel/CSV download all working. Checked off 9/12 definition-of-done items in PLAN.md.
