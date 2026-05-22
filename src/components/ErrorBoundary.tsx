@@ -15,6 +15,10 @@ export class ErrorBoundary extends Component<Props, State> {
     return { error };
   }
 
+  componentDidCatch(error: Error) {
+    console.error("[ErrorBoundary]", error);
+  }
+
   render() {
     if (this.state.error) {
       return (
@@ -22,7 +26,7 @@ export class ErrorBoundary extends Component<Props, State> {
           <div className="rounded-sm border border-red/30 bg-red/5 p-6">
             <h2 className="font-serif text-lg font-bold text-red">Something went wrong</h2>
             <p className="mt-2 text-sm text-text-secondary">
-              {this.state.error.message}
+              An unexpected error occurred while processing your files. Try uploading again or use a different file format.
             </p>
             <button
               onClick={() => this.setState({ error: null })}

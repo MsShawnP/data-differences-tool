@@ -93,3 +93,18 @@ Each entry records what was found, what was fixed, and when to
 check again.
 
 <!-- Entries are added by /improve — don't delete this section -->
+
+### 2026-05-22 — Improvement pass
+- **Trigger:** First-ever /improve run (project was overdue)
+- **What was reviewed:** Security (automated), code quality, dependencies, tests, docs, git hygiene
+- **What was fixed:**
+  - Fixed Excel serial date offset bug (off-by-one, was 25570 should be 25569)
+  - Added 50MB file size limit on uploads
+  - Added 200K row count cap to prevent UI freezes
+  - Added magic-byte validation for XLSX files
+  - Code-split SheetJS and ExcelJS into lazy-loaded chunks (1.5MB → 297KB initial bundle)
+  - Error boundary now shows generic message, logs internals to console
+  - Updated README from stub to full documentation
+  - Documented SheetJS vulnerability acceptance in DECISIONS.md
+- **Deferred:** SheetJS replacement (significant refactor, low practical risk for client-side tool)
+- **Next review:** 2026-06-19

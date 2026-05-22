@@ -84,8 +84,8 @@ describe("normalizeValue", () => {
       expect(normalizeValue("January 15, 2024", dateColumn, defaultConfig)).toBe("2024-01-15");
     });
 
-    it("converts Excel date serial 45307 to 2024-01-15", () => {
-      expect(normalizeValue(45307, dateColumn, defaultConfig)).toBe("2024-01-15");
+    it("converts Excel date serial 45306 to 2024-01-15", () => {
+      expect(normalizeValue(45306, dateColumn, defaultConfig)).toBe("2024-01-15");
     });
   });
 
@@ -201,8 +201,8 @@ describe("valuesAreEqual", () => {
   });
 
   describe("Excel date serial", () => {
-    it("treats serial 45307 and '2024-01-15' as equal in date column", () => {
-      expect(valuesAreEqual(45307, "2024-01-15", dateColumn, defaultConfig)).toBe(true);
+    it("treats serial 45306 and '2024-01-15' as equal in date column", () => {
+      expect(valuesAreEqual(45306, "2024-01-15", dateColumn, defaultConfig)).toBe(true);
     });
   });
 });

@@ -26,10 +26,10 @@ function isExcelDateSerial(value: unknown): boolean {
 }
 
 function excelSerialToISO(serial: number): string {
-  // Excel serial 1 = 1900-01-01. Offset 25570 aligns with JS epoch.
+  // Excel serial 1 = 1900-01-01. Offset 25569 aligns with JS epoch.
   // (Excel has a known Lotus 1-2-3 bug treating 1900 as a leap year,
   // but for dates after 1900-03-01 this offset is correct.)
-  const ms = (serial - 25570) * 86400000;
+  const ms = (serial - 25569) * 86400000;
   const date = new Date(ms);
   const year = date.getUTCFullYear();
   const month = String(date.getUTCMonth() + 1).padStart(2, "0");

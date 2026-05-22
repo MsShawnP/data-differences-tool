@@ -18,6 +18,23 @@ export function FileUpload({ label, file, onParsed, onError }: FileUploadProps) 
       const droppedFile = acceptedFiles[0];
       if (!droppedFile) return;
 
+      const MAX_FILE_SIZE = 50 * 1024 * 1024;
+      if (droppedFile.size > MAX_FILE_SIZE) {
+        onError(`File too large (${(droppedFile.size / 1024 / 1024).toFixed(1)} MB). Maximum is 50 MB.`);
+        return;
+      }
+
+      const isXlsx = droppedFile.name.endsWith(".xlsx") || droppedFile.name.endsWith(".xls");
+      if (isXlsx) {
+        const header = new Uint8Array(await droppedFile.slice(0, 4).arrayBuffer());
+        const isZip = header[0] === 0x50 && header[1] === 0x4B;
+        const isOle = header[0] === 0xD0 && header[1] === 0xCF && header[2] === 0x11 && header[3] === 0xE0;
+        if (!isZip && !isOle) {
+          onError("File does not appear to be a valid spreadsheet. Try saving it as .xlsx or .csv.");
+          return;
+        }
+      }
+
       setLoading(true);
       try {
         const parsed = await parseFile(droppedFile);

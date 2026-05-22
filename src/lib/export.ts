@@ -1,6 +1,15 @@
-import ExcelJS from "exceljs";
+import type ExcelJSType from "exceljs";
 import type { DiffResult, RowChange } from "@/types";
 import { generateSummary } from "@/lib/summary-generator";
+
+let ExcelJS: typeof ExcelJSType;
+
+async function getExcelJS() {
+  if (!ExcelJS) {
+    ExcelJS = (await import("exceljs")).default;
+  }
+  return ExcelJS;
+}
 
 interface ExportRow {
   key: string;
@@ -41,7 +50,8 @@ function formatKey(change: RowChange, keyColumns: string[]): string {
 }
 
 export async function exportToExcel(result: DiffResult): Promise<Blob> {
-  const workbook = new ExcelJS.Workbook();
+  const EJS = await getExcelJS();
+  const workbook = new EJS.Workbook();
 
   // Sheet 1: Summary
   const summarySheet = workbook.addWorksheet("Summary");
@@ -74,17 +84,17 @@ export async function exportToExcel(result: DiffResult): Promise<Blob> {
     changesSheet.addRow(["No differences found", "", "", "", ""]);
   }
 
-  const greenFill: ExcelJS.FillPattern = {
+  const greenFill: ExcelJSType.FillPattern = {
     type: "pattern",
     pattern: "solid",
     fgColor: { argb: "FFD4EDDA" },
   };
-  const redFill: ExcelJS.FillPattern = {
+  const redFill: ExcelJSType.FillPattern = {
     type: "pattern",
     pattern: "solid",
     fgColor: { argb: "FFF8D7DA" },
   };
-  const yellowFill: ExcelJS.FillPattern = {
+  const yellowFill: ExcelJSType.FillPattern = {
     type: "pattern",
     pattern: "solid",
     fgColor: { argb: "FFFFF3CD" },
@@ -99,7 +109,7 @@ export async function exportToExcel(result: DiffResult): Promise<Blob> {
       row.newValue,
     ]);
 
-    let fill: ExcelJS.FillPattern | undefined;
+    let fill: ExcelJSType.FillPattern | undefined;
     if (row.changeType === "Added") fill = greenFill;
     else if (row.changeType === "Removed") fill = redFill;
     else if (row.changeType === "Modified") fill = yellowFill;

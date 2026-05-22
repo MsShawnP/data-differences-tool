@@ -57,6 +57,11 @@ Each entry:
 - **Scope:** `src/lib/normalizer.ts` and `src/lib/parser.ts`
 - **Do not:** Switch to local time methods or disable `cellDates` without handling the column detection gap.
 
+### 2026-05-22 — Accept SheetJS (xlsx) npm vulnerabilities for v1
+- **Why:** The community edition on npm is abandoned with no fix. Replacing it requires a significant refactor (it handles CSV parsing, XLSX parsing, column type detection, date conversion). The vulnerabilities (prototype pollution, ReDoS) are client-side only — blast radius is the uploading user's own browser tab. Users upload their own files, so the attack vector requires self-exploitation or social engineering.
+- **Scope:** `src/lib/parser.ts`, dependency `xlsx`
+- **Do not:** Dismiss this permanently. Revisit when ExcelJS adds CSV reading support or a maintained SheetJS fork emerges.
+
 ---
 
 ## Data & Schema

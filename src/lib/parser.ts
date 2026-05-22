@@ -1,5 +1,14 @@
-import * as XLSX from "xlsx";
+import type * as XLSXTypes from "xlsx";
 import type { ColumnMetadata, ColumnType, ParsedFile } from "@/types";
+
+let XLSX: typeof XLSXTypes;
+
+async function getXLSX() {
+  if (!XLSX) {
+    XLSX = await import("xlsx");
+  }
+  return XLSX;
+}
 
 /**
  * Parse a CSV or XLSX file into a normalized ParsedFile structure.
@@ -7,6 +16,7 @@ import type { ColumnMetadata, ColumnType, ParsedFile } from "@/types";
  * Only the first sheet is processed for multi-sheet workbooks.
  */
 export async function parseFile(file: File): Promise<ParsedFile> {
+  await getXLSX();
   const buffer = await file.arrayBuffer();
   const workbook = XLSX.read(buffer, {
     type: "array",
@@ -41,7 +51,7 @@ export async function parseFile(file: File): Promise<ParsedFile> {
  * Scans up to the first 100 data rows, using majority-vote
  * on SheetJS cell `.t` properties to determine each column's type.
  */
-function detectColumns(sheet: XLSX.WorkSheet): ColumnMetadata[] {
+function detectColumns(sheet: XLSXTypes.WorkSheet): ColumnMetadata[] {
   const range = XLSX.utils.decode_range(sheet["!ref"] ?? "A1");
   const columns: ColumnMetadata[] = [];
 
