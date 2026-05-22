@@ -58,17 +58,17 @@ explained in plain language anyone can act on?
 ## Definition of done for this arc
 
 - [x] App deployed to Cloudflare Pages
-- [ ] Can upload two CSV files and see correct diff report
-- [ ] Can upload two XLSX files and see correct diff report
-- [ ] Can upload one CSV + one XLSX and diff them
-- [ ] Interactive key column picker works
-- [ ] Auto-detect key column works with clear indication of what it chose
-- [ ] Tolerant matching handles: whitespace, 12.00 vs 12, leading zeros,
+- [x] Can upload two CSV files and see correct diff report
+- [x] Can upload two XLSX files and see correct diff report
+- [x] Can upload one CSV + one XLSX and diff them
+- [x] Interactive key column picker works
+- [x] Auto-detect key column works with clear indication of what it chose
+- [x] Tolerant matching handles: whitespace, 12.00 vs 12, leading zeros,
       date formats
 - [ ] Mismatched columns flagged correctly
-- [ ] Template summary paragraph is accurate
-- [ ] Excel download works and is usable
-- [ ] CSV download works
+- [x] Template summary paragraph is accurate
+- [x] Excel download works and is usable
+- [x] CSV download works
 - [ ] Page is self-explanatory to non-technical user
 - [ ] Worth handing someone a link to
 

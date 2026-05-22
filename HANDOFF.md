@@ -9,6 +9,18 @@ For things that didn't work, see FAILURES.md.
 
 ---
 
+## 2026-05-22 15:35
+
+**What changed:** Verified all major features — XLSX upload, mixed format diff, Excel/CSV download all working. Checked off 9/12 definition-of-done items in PLAN.md.
+
+**Why:** Completing verification of features that couldn't be tested last session. XLSX and download were the remaining unknowns.
+
+**State:** All core features verified. Remaining unchecked items: mismatched columns test, page self-explanatory (subjective), worth sharing (subjective). Date normalization fix from earlier this session is working.
+
+**Next:** Test mismatched columns scenario. Consider redeploying with the date fix. Evaluate UX for the two subjective items.
+
+---
+
 ## 2026-05-22 15:28
 
 **What changed:** Fixed date normalization bug — added UTC-based Date object handler in normalizer.ts. Tested all tolerant matching features in browser.
