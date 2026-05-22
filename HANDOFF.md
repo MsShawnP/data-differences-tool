@@ -9,6 +9,18 @@ For things that didn't work, see FAILURES.md.
 
 ---
 
+## 2026-05-22 15:45
+
+**Started from:** App deployed and code-reviewed but definition-of-done items not verified.
+
+**Did:** Tested all features (CSV, XLSX, mixed format, tolerant matching, downloads, mismatched columns). Fixed date normalization bug (SheetJS UTC vs local parsing). Redeployed to Cloudflare Pages. Checked off 10/12 definition-of-done items.
+
+**State:** All functional features verified. Live at https://data-differences-tool.pages.dev/ with date fix. 70 tests pass. Remaining 2 items are subjective UX judgments.
+
+**Next:** Evaluate "self-explanatory" and "worth sharing" items on live site. If satisfied, mark arc complete. Consider /improve or /ce:compound.
+
+---
+
 ## 2026-05-22 15:40
 
 **What changed:** Verified mismatched columns (added/removed/renamed all flagged correctly). Redeployed to Cloudflare Pages with date normalization fix. 10/12 definition-of-done items checked off.

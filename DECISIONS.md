@@ -52,6 +52,11 @@ Each entry:
 - **Scope:** `src/types/index.ts`, any code consuming RowChange
 - **Do not:** Add new row-change variants as optional properties on a base interface.
 
+### 2026-05-22 — Use UTC methods for Date normalization, keep cellDates: true
+- **Why:** SheetJS parses dates inconsistently (ISO→UTC, slash→local). UTC methods give correct calendar date for the common case. Disabling cellDates would require detecting date columns from format strings (added complexity) and leaves CSV dates as unparsed strings that miss the date normalizer.
+- **Scope:** `src/lib/normalizer.ts` and `src/lib/parser.ts`
+- **Do not:** Switch to local time methods or disable `cellDates` without handling the column detection gap.
+
 ---
 
 ## Data & Schema

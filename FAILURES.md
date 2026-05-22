@@ -31,4 +31,14 @@ quarto" or "scope, scrollytelling, decoration"]
 
 ## Entries
 
-[New entries get added here, most recent at the top]
+### 2026-05-22 — Date normalization with local time methods gives wrong day for UTC-parsed dates
+
+**Attempted:** Fixed Date object normalization in `normalizer.ts` using `getFullYear()`/`getMonth()`/`getDate()` (local time methods) to extract calendar date from SheetJS Date objects.
+
+**Why it didn't work:** SheetJS with `cellDates: true` parses ISO dates (`2024-01-15`) as UTC midnight. In EST (UTC-5), local time methods convert that to Jan 14 at 7pm — extracting the wrong calendar day. Meanwhile slash dates (`01/15/2024`) are parsed as local midnight, giving the correct local day. The inconsistency means local methods produce different outputs for the same intended date.
+
+**What we tried instead:** Used UTC methods (`getUTCFullYear`/`getUTCMonth`/`getUTCDate`). Both parsing paths produce the correct UTC date for US timezones. Edge case remains for timezones east of UTC where slash-format local midnight falls on the previous UTC day, but this is acceptable for v1.
+
+**Status:** Resolved
+
+**Tags:** sheetjs, dates, timezone, normalization, cellDates
