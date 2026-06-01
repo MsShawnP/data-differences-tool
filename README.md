@@ -2,7 +2,7 @@
 
 Compare two tabular data files (CSV or XLSX) and get a clear, readable report of what changed — rows added, removed, or modified, with before/after values for every field.
 
-**Live:** https://data-differences-tool.pages.dev/
+**Live:** https://diff.lailarallc.com
 
 ## What it does
 
