@@ -46,3 +46,6 @@ npm run deploy
 ```
 
 Builds and deploys to Cloudflare Pages via Wrangler.
+
+---
+Built by [Lailara LLC](https://lailarallc.com) — data hygiene and analytics consulting for specialty food brands scaling into national retail.
