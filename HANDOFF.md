@@ -15,7 +15,7 @@ For things that didn't work, see FAILURES.md.
 
 **Did:** Evaluated UX, added auto-detect key column on mount + explanatory copy, redeployed, checked off all 12/12 items, archived v1.0 arc, ran /ce:compound (first solution doc written to docs/solutions/bugs/).
 
-**State:** v1.0 complete. Live at https://data-differences-tool.pages.dev/. 70 tests, 297KB bundle. No active arc.
+**State:** v1.0 complete. Live at https://diff.lailarallc.com/. 70 tests, 297KB bundle. No active arc.
 
 **Next:** No active work arc. Options: start v1.1 arc, run /improve audit-only when due (2026-06-19), or move to a different project.
 
@@ -27,7 +27,7 @@ For things that didn't work, see FAILURES.md.
 
 **Did:** Tested all features (CSV, XLSX, mixed, tolerant matching, downloads, mismatched columns). Fixed date normalization bug. Ran first /improve pass: fixed 8 findings (Excel serial offset, file size limit, row cap, magic-byte validation, code-splitting, error boundary, README, SheetJS docs). Redeployed.
 
-**State:** All functional features verified. Live at https://data-differences-tool.pages.dev/. 70 tests pass, 297KB initial bundle. 10/12 definition-of-done checked. Need to redeploy with /improve fixes.
+**State:** All functional features verified. Live at https://diff.lailarallc.com/. 70 tests pass, 297KB initial bundle. 10/12 definition-of-done checked. Need to redeploy with /improve fixes.
 
 **Next:** Redeploy with /improve fixes. Evaluate two subjective items ("self-explanatory", "worth sharing"). If satisfied, mark arc complete. Run /ce:compound.
 
@@ -39,7 +39,7 @@ For things that didn't work, see FAILURES.md.
 
 **Did:** Tested all features (CSV, XLSX, mixed format, tolerant matching, downloads, mismatched columns). Fixed date normalization bug (SheetJS UTC vs local parsing). Redeployed to Cloudflare Pages. Checked off 10/12 definition-of-done items.
 
-**State:** All functional features verified. Live at https://data-differences-tool.pages.dev/ with date fix. 70 tests pass. Remaining 2 items are subjective UX judgments.
+**State:** All functional features verified. Live at https://diff.lailarallc.com/ with date fix. 70 tests pass. Remaining 2 items are subjective UX judgments.
 
 **Next:** Evaluate "self-explanatory" and "worth sharing" items on live site. If satisfied, mark arc complete. Consider /improve or /ce:compound.
 
@@ -51,7 +51,7 @@ For things that didn't work, see FAILURES.md.
 
 **Why:** Completing feature verification and shipping the date fix to production.
 
-**State:** Live at https://data-differences-tool.pages.dev/ with all fixes. Remaining unchecked items are subjective (self-explanatory page, worth sharing). All functional features verified.
+**State:** Live at https://diff.lailarallc.com/ with all fixes. Remaining unchecked items are subjective (self-explanatory page, worth sharing). All functional features verified.
 
 **Next:** Evaluate the two subjective definition-of-done items. Consider running /improve or /ce:compound.
 
@@ -87,7 +87,7 @@ For things that didn't work, see FAILURES.md.
 
 **Did:** Ran /ce:review (10 reviewers), fixed all 16 findings (P0–P3), merged to main, redeployed to Cloudflare Pages.
 
-**State:** App live at https://data-differences-tool.pages.dev/ with all fixes. 70 tests pass, TypeScript clean. PLAN.md definition-of-done items not yet checked off (XLSX, tolerant matching, mixed format).
+**State:** App live at https://diff.lailarallc.com/ with all fixes. 70 tests pass, TypeScript clean. PLAN.md definition-of-done items not yet checked off (XLSX, tolerant matching, mixed format).
 
 **Next:** Test XLSX upload and tolerant matching edge cases. Check off definition-of-done items. Add tests for renamed-column diffing path.
 
@@ -113,7 +113,7 @@ For things that didn't work, see FAILURES.md.
 - Full visual QA: upload → auto-detect key columns → diff → expanded rows → export → reset
 - Installed @fontsource-variable packages for Playfair Display + Source Sans 3
 - Authenticated with Cloudflare, created Pages project, deployed
-- Live at https://data-differences-tool.pages.dev/
+- Live at https://diff.lailarallc.com/
 
 **State:** App deployed and fully functional. All core features verified, fonts rendering correctly, zero console errors. XLSX upload and tolerant matching edge cases not explicitly tested yet.
 
