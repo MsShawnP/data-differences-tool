@@ -9,3 +9,4 @@ Thumbs.db
 .claude-project-url
 .wrangler/
 .claude/worktrees/
+.vite/
