@@ -9,6 +9,18 @@ For things that didn't work, see FAILURES.md.
 
 ---
 
+## 2026-06-23
+
+**Started from:** v1.0 complete, no active arc. Last session 2026-05-22. /improve audit overdue. Clean tree.
+
+**Did:** Started v1.1 arc (executive-ready polish). Added SVG+ICO favicon, HTML meta tags (title, description, OG, Twitter card), "Built by Lailara LLC" footer. Verified via preview server. Deployed to Cloudflare Pages. Pushed to GitHub.
+
+**State:** v1.1 partially complete. Favicon, meta tags, footer live at diff.lailarallc.com. Apple-touch-icon PNG deferred. /improve audit deferred. Full click-through QA not done.
+
+**Next:** Spot-check OG preview on live site (metatags.io). Run /improve audit-only. Full click-through QA with real files. Generate apple-touch-icon PNG if desired.
+
+---
+
 ## 2026-05-22 16:30
 
 **Started from:** App deployed with /improve fixes. Needed to evaluate subjective definition-of-done items and close the v1.0 arc.
