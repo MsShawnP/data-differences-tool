@@ -7,70 +7,64 @@ session. For session-by-session state, see HANDOFF.md.
 
 ## Goal
 
-Ship a deployed web app where users upload two tabular files (CSV/XLSX),
-pick key columns, and get a readable diff report — with tolerant matching
-for real-world dirty data.
+Make the Data Differences Tool presentable enough to hand a CEO, CFO, or
+consultant a naked link with no explanation needed.
 
 ## Why this arc, why now
 
-Universal pain point with no good existing tool at the consultant-grade
-level. Directly demonstrates Lailara's data quality pitch. Users are
-people Shawn hands the link to — it needs to work immediately and be
-worth using.
-
-## Business question this arc answers
-
-What specifically changed between these two versions of this data,
-explained in plain language anyone can act on?
-
-## Scope (from /clarify — 2026-05-16)
-
-**In scope (v1):**
-- Single-page web app, no auth, no persistence
-- Upload two files: CSV or XLSX
-- Interactive key column picker + auto-detect option
-- Row-level diff: added, removed, modified (with before/after values)
-- Column-level diff: added, removed, renamed (heuristic), reordered
-- Tolerant matching: whitespace normalization, numeric equivalence,
-  leading zeros, date format normalization, case-insensitive option
-- Mismatched schemas: flag column differences, diff the overlap
-- Template-based summary paragraph (no LLM)
-- In-browser readable report
-- Download: Excel (primary), CSV (secondary)
-- Self-explanatory page with instructions
-- Deploy to Cloudflare Pages
-
-**Out of scope (v1):**
-- Auth / user accounts / persistence
-- LLM-generated summaries
-- CLI interface
-- Three-way merge / conflict resolution
-- Database-to-database diff
-- Visual side-by-side diff panels
-- Diffing unstructured fields (JSON blobs in cells)
-- Schema migration generation
-- Saved configs / scheduled diffs
+v1.0 is functionally complete. The gap is first-impression credibility:
+no favicon, no link preview, no branding, and the /improve audit is
+overdue. This is a 30–60 minute pass, not a feature arc.
 
 ## Tasks
 
-[To be filled during /ce:brainstorm and /ce:plan]
+### 1. Favicon + Apple touch icon
+- [x] Add Lailara favicon (SVG 32×32 + ICO fallback)
+- [x] Add to `index.html` `<head>`
+- [ ] Apple touch icon 180×180 PNG (needs conversion tool — deferred)
+
+### 2. HTML meta tags
+- [x] `<title>`: "Data Differences Tool — Lailara LLC"
+- [x] `<meta name="description">`
+- [x] OG tags (og:title, og:description, og:type=website, og:url)
+- [x] Twitter card (summary + title + description)
+
+### 3. Lailara wordmark in footer
+- [x] "Built by Lailara LLC" text link in footer
+- [x] Links to lailarallc.com
+- [x] Subtle — warm-gray, underlined, centered
+
+### 4. Visual QA pass
+- [ ] Full click-through on desktop: upload CSV pair, XLSX pair, mixed
+- [ ] Verify auto-detect copy is clear
+- [ ] Verify download buttons work (Excel + CSV)
+- [ ] Check mobile viewport (iPhone SE width minimum)
+- [ ] Confirm fonts load (Playfair Display headings, Source Sans 3 body)
+
+### 5. /improve audit-only
+- [ ] Run /improve audit-only (was due 2026-06-19, deferred to next session)
+- [ ] Fix any P0/P1 findings
+- [ ] Log P2+ to backlog, don't block deploy
+
+### 6. Redeploy
+- [x] `npm run deploy`
+- [ ] Verify live at diff.lailarallc.com
+- [ ] Spot-check OG preview (paste URL in Slack or https://metatags.io)
 
 ## Definition of done for this arc
 
-- [x] App deployed to Cloudflare Pages
-- [x] Can upload two CSV files and see correct diff report
-- [x] Can upload two XLSX files and see correct diff report
-- [x] Can upload one CSV + one XLSX and diff them
-- [x] Interactive key column picker works
-- [x] Auto-detect key column works with clear indication of what it chose
-- [x] Tolerant matching handles: whitespace, 12.00 vs 12, leading zeros,
-      date formats
-- [x] Mismatched columns flagged correctly
-- [x] Template summary paragraph is accurate
-- [x] Excel download works and is usable
-- [x] CSV download works
-- [x] Page is self-explanatory to non-technical user
-- [x] Worth handing someone a link to
+- [ ] Link preview in Slack/iMessage shows title + description (not blank)
+- [ ] Favicon visible in browser tab
+- [ ] Footer credits Lailara
+- [ ] No visual regressions from v1.0
+- [ ] /improve audit current
+
+## Out of scope
+
+- New features (v1.1 is polish only)
+- SheetJS replacement
+- Analytics / tracking
+- Auth or persistence
 
 ---
 

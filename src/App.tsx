@@ -74,6 +74,20 @@ export default function App() {
             </div>
           )}
         </main>
+
+        <footer className="mt-16 border-t border-border pt-6 pb-8 text-center">
+          <p className="text-sm text-warm-gray">
+            Built by{" "}
+            <a
+              href="https://lailarallc.com"
+              className="text-warm-gray underline hover:text-text-primary"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Lailara LLC
+            </a>
+          </p>
+        </footer>
       </div>
     </div>
     </ErrorBoundary>
