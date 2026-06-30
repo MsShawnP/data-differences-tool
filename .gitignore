@@ -10,3 +10,10 @@ Thumbs.db
 .wrangler/
 .claude/worktrees/
 .vite/
+
+# Security - secret leak prevention
+.env.*
+*.pem
+*.key
+credentials.*
+secrets.*
