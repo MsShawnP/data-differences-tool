@@ -150,6 +150,15 @@ export function computeDiff(
     }
   }
 
+  // Reconcile raw row counts against distinct-key counts. Duplicate keys (and
+  // blank keys, which collapse into a single "" bucket) drop rows from the
+  // comparison, so added/removed/modified can all be 0 even when the files
+  // differ. Surfacing the excluded count keeps an "identical" verdict honest.
+  const distinctKeysA = indexA.size;
+  const distinctKeysB = indexB.size;
+  const excludedRowCount =
+    (fileA.rows.length - distinctKeysA) + (fileB.rows.length - distinctKeysB);
+
   return {
     summary: {
       totalRowsA: fileA.rowCount,
@@ -158,6 +167,9 @@ export function computeDiff(
       removedCount: rowChanges.filter((r) => r.type === "removed").length,
       modifiedCount: rowChanges.filter((r) => r.type === "modified").length,
       unchangedCount,
+      distinctKeysA,
+      distinctKeysB,
+      excludedRowCount,
     },
     columnChanges,
     rowChanges,

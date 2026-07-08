@@ -3,19 +3,30 @@ import type { DiffResult } from "@/types";
 export function generateSummary(result: DiffResult): string {
   const { summary, rowChanges } = result;
   const { addedCount, removedCount, modifiedCount } = summary;
+  const excludedRowCount = summary.excludedRowCount ?? 0;
+
+  const excludedClause =
+    excludedRowCount > 0
+      ? ` ${excludedRowCount} duplicate/blank key row${excludedRowCount === 1 ? "" : "s"} excluded from comparison.`
+      : "";
 
   if (addedCount === 0 && removedCount === 0 && modifiedCount === 0) {
-    return "Files are identical. No differences found.";
+    // Only claim identical when the row sets truly match. Excluded rows mean
+    // some rows never got compared, so the files may still differ.
+    if (excludedRowCount === 0) {
+      return "Files are identical. No differences found.";
+    }
+    return `No differences among the compared rows, but ${excludedRowCount} row${excludedRowCount === 1 ? "" : "s"} could not be matched because of duplicate or blank keys — the files are not necessarily identical.`;
   }
 
   const parts: string[] = [];
 
   if (addedCount > 0 && removedCount === 0 && modifiedCount === 0) {
-    return `${addedCount} new row${addedCount === 1 ? "" : "s"} added. No existing rows were modified or removed.`;
+    return `${addedCount} new row${addedCount === 1 ? "" : "s"} added. No existing rows were modified or removed.` + excludedClause;
   }
 
   if (removedCount > 0 && addedCount === 0 && modifiedCount === 0) {
-    return `${removedCount} row${removedCount === 1 ? "" : "s"} removed. No rows were added or modified.`;
+    return `${removedCount} row${removedCount === 1 ? "" : "s"} removed. No rows were added or modified.` + excludedClause;
   }
 
   if (addedCount > 0) parts.push(`${addedCount} row${addedCount === 1 ? "" : "s"} added`);
@@ -34,7 +45,7 @@ export function generateSummary(result: DiffResult): string {
     sentence += ` Most common change: ${pattern}.`;
   }
 
-  return sentence;
+  return sentence + excludedClause;
 }
 
 function getChangedColumns(

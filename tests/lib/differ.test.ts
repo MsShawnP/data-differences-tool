@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { computeDiff } from "@/lib/differ";
+import { generateSummary } from "@/lib/summary-generator";
 import type { DiffConfig, ParsedFile } from "@/types";
 
 function makeParsedFile(
@@ -253,6 +254,71 @@ describe("computeDiff", () => {
 
     expect(result.summary.unchangedCount).toBe(1);
     expect(result.summary.modifiedCount).toBe(0);
+  });
+
+  it("does not report identical when a duplicate key hides a dropped row", () => {
+    // File A has a duplicate key; File B is one row shorter. Because the index
+    // keeps only the last occurrence of each key, the duplicate collapses and
+    // added/removed/modified all come out 0 — but the files are NOT identical
+    // (File A carries an extra row). This is the false-"identical" bug.
+    const fileA = makeParsedFile("a.csv", ["id", "value"], [
+      { id: "1", value: "x" },
+      { id: "1", value: "x" }, // duplicate key
+      { id: "2", value: "y" },
+    ]);
+    const fileB = makeParsedFile("b.csv", ["id", "value"], [
+      { id: "1", value: "x" },
+      { id: "2", value: "y" },
+    ]);
+
+    const result = computeDiff(fileA, fileB, defaultConfig);
+
+    // The collapsed duplicate produces no added/removed/modified rows...
+    expect(result.summary.addedCount).toBe(0);
+    expect(result.summary.removedCount).toBe(0);
+    expect(result.summary.modifiedCount).toBe(0);
+
+    // ...but the raw-vs-distinct reconciliation surfaces the dropped row.
+    expect(result.summary.distinctKeysA).toBe(2);
+    expect(result.summary.excludedRowCount).toBe(1);
+
+    // The verdict must not claim the files are identical.
+    const summary = generateSummary(result);
+    expect(summary).not.toBe("Files are identical. No differences found.");
+    expect(summary.toLowerCase()).toContain("duplicate or blank keys");
+  });
+
+  it("counts collapsed blank-key rows as excluded", () => {
+    const fileA = makeParsedFile("a.csv", ["id", "value"], [
+      { id: "", value: "x" },
+      { id: "", value: "y" }, // second blank key collapses onto the first
+      { id: "1", value: "z" },
+    ]);
+    const fileB = makeParsedFile("b.csv", ["id", "value"], [
+      { id: "", value: "x" },
+      { id: "1", value: "z" },
+    ]);
+
+    const result = computeDiff(fileA, fileB, defaultConfig);
+
+    // Both blank rows share the "" key, so one is dropped from comparison.
+    expect(result.summary.excludedRowCount).toBe(1);
+    expect(generateSummary(result)).not.toBe("Files are identical. No differences found.");
+  });
+
+  it("still reports identical when there are no duplicate or blank keys", () => {
+    const rows = [
+      { id: "1", value: "x" },
+      { id: "2", value: "y" },
+    ];
+    const fileA = makeParsedFile("a.csv", ["id", "value"], rows);
+    const fileB = makeParsedFile("b.csv", ["id", "value"], rows);
+
+    const result = computeDiff(fileA, fileB, defaultConfig);
+
+    expect(result.summary.excludedRowCount).toBe(0);
+    expect(result.summary.distinctKeysA).toBe(2);
+    expect(generateSummary(result)).toBe("Files are identical. No differences found.");
   });
 
   it("swapping A and B turns added into removed and vice versa", () => {

@@ -66,6 +66,7 @@ export async function exportToExcel(result: DiffResult): Promise<Blob> {
   summarySheet.addRow(["Removed rows", result.summary.removedCount]);
   summarySheet.addRow(["Modified rows", result.summary.modifiedCount]);
   summarySheet.addRow(["Unchanged rows", result.summary.unchangedCount]);
+  summarySheet.addRow(["Duplicate/blank keys excluded", result.summary.excludedRowCount ?? 0]);
   summarySheet.addRow([]);
   summarySheet.addRow(["Key columns used", result.keyColumnsUsed.join(", ")]);
 

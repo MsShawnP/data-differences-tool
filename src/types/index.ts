@@ -69,6 +69,13 @@ export interface DiffResult {
     removedCount: number;
     modifiedCount: number;
     unchangedCount: number;
+    // Distinct composite keys actually compared per file. When a file has
+    // duplicate or blank keys, distinctKeys is smaller than the raw row count.
+    distinctKeysA?: number;
+    distinctKeysB?: number;
+    // Rows dropped from comparison because their key duplicated another row's
+    // key or was blank (raw rows minus distinct keys, across both files).
+    excludedRowCount?: number;
   };
   columnChanges: ColumnChange[];
   rowChanges: RowChange[];

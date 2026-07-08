@@ -7,6 +7,7 @@ interface DiffSummaryProps {
 
 export function DiffSummary({ result }: DiffSummaryProps) {
   const summary = generateSummary(result);
+  const excludedRowCount = result.summary.excludedRowCount ?? 0;
 
   return (
     <div className="rounded-sm border border-border bg-white p-6">
@@ -17,6 +18,11 @@ export function DiffSummary({ result }: DiffSummaryProps) {
         <Stat label="Modified" value={result.summary.modifiedCount} color="text-amber" />
         <Stat label="Unchanged" value={result.summary.unchangedCount} color="text-text-secondary" />
       </div>
+      {excludedRowCount > 0 && (
+        <p className="mt-3 text-sm text-text-secondary">
+          {excludedRowCount} duplicate/blank key row{excludedRowCount === 1 ? "" : "s"} excluded from comparison.
+        </p>
+      )}
     </div>
   );
 }
