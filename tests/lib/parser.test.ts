@@ -51,6 +51,38 @@ describe("parseFile", () => {
     expect(result.columns[1]?.detectedType).toBe("text");
   });
 
+  it("names a blank-header column to match its row key so its values compare", async () => {
+    // Middle column has no header. SheetJS keys its values as "__EMPTY";
+    // the column metadata name must match, or the column never compares.
+    const csvContent = "id,,amount\n1,foo,100\n2,bar,200\n";
+    const file = new File([csvContent], "blank-header.csv", { type: "text/csv" });
+    const result = await parseFile(file);
+
+    expect(result.columns).toHaveLength(3);
+    const blankCol = result.columns[1]!;
+    expect(blankCol.name).toBe("__EMPTY");
+    // The metadata name is an actual key on the row object (not undefined).
+    expect(result.rows[0]![blankCol.name]).toBe("foo");
+    // Every column name resolves to a real value on the first row.
+    for (const col of result.columns) {
+      expect(result.rows[0]![col.name]).toBeDefined();
+    }
+  });
+
+  it("disambiguates duplicate header columns to match their row keys", async () => {
+    // Two "name" columns. SheetJS keys the second as "name_1".
+    const csvContent = "id,name,name\n1,Alice,Smith\n";
+    const file = new File([csvContent], "dup-header.csv", { type: "text/csv" });
+    const result = await parseFile(file);
+
+    expect(result.columns).toHaveLength(3);
+    expect(result.columns[1]?.name).toBe("name");
+    expect(result.columns[2]?.name).toBe("name_1");
+    // Both distinct keys are present on the row, so both columns compare.
+    expect(result.rows[0]!["name"]).toBe("Alice");
+    expect(result.rows[0]!["name_1"]).toBe("Smith");
+  });
+
   it("returns ParsedFile with zero rows and correct column names for headers-only file", async () => {
     const csvContent = "col_a,col_b,col_c\n";
     const file = new File([csvContent], "empty.csv", { type: "text/csv" });

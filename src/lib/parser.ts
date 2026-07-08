@@ -55,9 +55,33 @@ function detectColumns(sheet: XLSXTypes.WorkSheet): ColumnMetadata[] {
   const range = XLSX.utils.decode_range(sheet["!ref"] ?? "A1");
   const columns: ColumnMetadata[] = [];
 
+  // Mirror SheetJS's sheet_to_json header-key generation so each column's
+  // metadata name matches the key it produces on every row object. Blank
+  // headers become __EMPTY / __EMPTY_1 / …; duplicate headers get _1, _2, …
+  // suffixes. Naming a blank column "Column3" or leaving two "Name" columns
+  // identical left the metadata name pointing at a key the rows never had
+  // (__EMPTY / Name_1), so those columns silently never compared.
+  const usedNames = new Map<string, number>();
+  function uniqueHeaderKey(base: string): string {
+    if (!usedNames.has(base)) {
+      usedNames.set(base, 0);
+      return base;
+    }
+    let counter = usedNames.get(base)!;
+    let candidate: string;
+    do {
+      counter++;
+      candidate = `${base}_${counter}`;
+    } while (usedNames.has(candidate));
+    usedNames.set(base, counter);
+    usedNames.set(candidate, 0);
+    return candidate;
+  }
+
   for (let col = range.s.c; col <= range.e.c; col++) {
     const headerCell = sheet[XLSX.utils.encode_cell({ r: range.s.r, c: col })];
-    const name = headerCell ? String(headerCell.v) : `Column${col + 1}`;
+    const rawHeader = headerCell ? String(headerCell.v) : "";
+    const name = uniqueHeaderKey(rawHeader === "" ? "__EMPTY" : rawHeader);
 
     const typeCounts: Record<string, number> = {};
     let formatString: string | undefined;
