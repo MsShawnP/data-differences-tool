@@ -3,6 +3,10 @@
 @theme {
   --font-serif: "Playfair Display Variable", Georgia, "Times New Roman", serif;
   --font-sans: "Source Sans 3 Variable", "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* 2px is the only radius in the Lailara design system. Override Tailwind's
+     default --radius-sm (0.25rem = 4px) so every rounded-sm card/button/input
+     lands on brand. */
+  --radius-sm: 2px;
   --color-background: #f5f3ee;
   --color-text-primary: #333333;
   --color-text-secondary: #595959;
@@ -11,6 +15,9 @@
   --color-navy-hover: #141e52;
   --color-steel-blue: #8e9ad0;
   --color-red: #cc100a;
+  /* Red-95: the sanctioned alert surface / error-banner fill. Red-42 (#cc100a)
+     is ink only — text and 1px rules, never a background fill. */
+  --color-red-surface: #fce8e7;
   --color-green: #158f75;
   --color-amber: #ee8a2a;
   --color-warm-gray: #666666;

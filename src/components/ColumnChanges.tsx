@@ -42,7 +42,7 @@ export function ColumnChanges({ changes }: ColumnChangesProps) {
 function ChangeTag({ type }: { type: ColumnChange["type"] }) {
   const styles = {
     added: "bg-green/10 text-green",
-    removed: "bg-red/10 text-red",
+    removed: "bg-red-surface text-red",
     renamed: "bg-amber/10 text-amber",
     reordered: "bg-steel-blue/10 text-steel-blue",
   };

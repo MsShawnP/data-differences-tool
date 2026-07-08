@@ -63,7 +63,7 @@ export default function App() {
           )}
 
           {state.step === "error" && state.error && (
-            <div className="rounded-sm border border-red/30 bg-red/5 p-4">
+            <div className="rounded-sm border border-red/30 bg-red-surface p-4">
               <p className="text-sm text-red">{state.error}</p>
               <button
                 onClick={reset}

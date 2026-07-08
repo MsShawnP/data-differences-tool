@@ -166,6 +166,9 @@ function ChangeSection({
 }) {
   const [page, setPage] = useState(0);
   const borderColor = color === "green" ? "border-green" : "border-red";
+  // Red is ink — a 1px rule, never a heavier accent bar. Keep the added
+  // (green) section on the 3px insight-line accent.
+  const borderWidth = color === "green" ? "border-l-3" : "border-l";
   const pageRows = rows.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
 
   return (
@@ -177,7 +180,7 @@ function ChangeSection({
             .map((col) => String(row.keyValues[col] ?? ""))
             .join(", ");
           return (
-            <p key={page * PAGE_SIZE + i} className={`border-l-3 ${borderColor} pl-3 text-sm text-text-primary`}>
+            <p key={page * PAGE_SIZE + i} className={`${borderWidth} ${borderColor} pl-3 text-sm text-text-primary`}>
               {keyStr}
             </p>
           );
