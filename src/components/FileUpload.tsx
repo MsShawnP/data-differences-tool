@@ -62,7 +62,10 @@ export function FileUpload({ label, file, onParsed, onError }: FileUploadProps) 
     <div className="flex-1">
       <p className="mb-2 text-sm font-semibold text-text-secondary">{label}</p>
       <div
-        {...getRootProps()}
+        {...getRootProps({
+          role: "button",
+          "aria-label": `${label}: upload area. Press Enter or Space to browse for a CSV or XLSX file, or drag and drop one here.`,
+        })}
         className={`flex min-h-[160px] cursor-pointer flex-col items-center justify-center rounded-sm border-2 border-dashed p-6 transition-colors ${
           isDragActive
             ? "border-navy bg-navy/5"
