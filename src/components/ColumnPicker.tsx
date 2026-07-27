@@ -15,9 +15,13 @@ export function ColumnPicker({ fileA, fileB, onCompare }: ColumnPickerProps) {
 
   const allColumns = fileA.columns.map((c) => c.name);
 
+  // Re-run auto-detect whenever the files change (e.g. the user swaps one out
+  // without leaving this step), so the selected key can't go stale.
   useEffect(() => {
-    handleAutoDetect();
-  }, []);
+    const result = detectKeyColumns(fileA, fileB);
+    setSelectedKeys(result.detected ? new Set(result.detected) : new Set());
+    setAutoDetectMsg(result.explanation);
+  }, [fileA, fileB]);
 
   function handleAutoDetect() {
     const result = detectKeyColumns(fileA, fileB);
