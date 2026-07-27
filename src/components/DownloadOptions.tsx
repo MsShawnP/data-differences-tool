@@ -8,20 +8,31 @@ interface DownloadOptionsProps {
 
 export function DownloadOptions({ result }: DownloadOptionsProps) {
   const [exporting, setExporting] = useState(false);
+  const [exportError, setExportError] = useState<string | null>(null);
 
   async function handleExcel() {
     setExporting(true);
+    setExportError(null);
     try {
       const blob = await exportToExcel(result);
       triggerDownload(blob, "diff-report.xlsx");
+    } catch {
+      // ErrorBoundary can't catch async event-handler rejections, so surface
+      // the failure inline instead of leaving the button silently dead.
+      setExportError("Couldn't generate the Excel file. Try the CSV download.");
     } finally {
       setExporting(false);
     }
   }
 
   function handleCsv() {
-    const blob = exportToCsv(result);
-    triggerDownload(blob, "diff-report.csv");
+    setExportError(null);
+    try {
+      const blob = exportToCsv(result);
+      triggerDownload(blob, "diff-report.csv");
+    } catch {
+      setExportError("Couldn't generate the CSV file.");
+    }
   }
 
   return (
@@ -44,6 +55,11 @@ export function DownloadOptions({ result }: DownloadOptionsProps) {
           Download CSV
         </button>
       </div>
+      {exportError && (
+        <p className="mt-3 text-sm text-red" role="alert">
+          {exportError}
+        </p>
+      )}
     </div>
   );
 }
