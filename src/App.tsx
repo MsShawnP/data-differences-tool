@@ -17,18 +17,18 @@ export default function App() {
             Data Differences Tool
           </h1>
           <p className="mt-2 text-lg text-text-secondary">
-            Upload two spreadsheets and see exactly what changed.
+            See exactly what changed between two versions of a spreadsheet.
           </p>
           {state.step === "idle" && (
             <p className="mt-3 text-sm text-text-secondary">
-              Upload the old and new versions of your file. We'll detect the key column automatically, compare every row, and show you what was added, removed, or modified — with before/after values. CSV and XLSX up to 50 MB.
+              Month-end exports, vendor price lists, headcount files — compare the old and new version without eyeballing thousands of rows or trusting that nothing slipped. We detect the key column automatically, compare every row, and show what was added, removed, or modified, with before/after values. CSV and XLSX up to 50 MB.
             </p>
           )}
         </header>
 
         <main className="space-y-8">
           {state.step !== "results" && (
-            <div className="flex gap-4">
+            <div className="flex flex-col gap-4 sm:flex-row">
               <FileUpload
                 label="File A (Before)"
                 file={state.fileA}
@@ -41,6 +41,26 @@ export default function App() {
                 onParsed={setFileB}
                 onError={setError}
               />
+            </div>
+          )}
+
+          {state.step === "idle" && (
+            <div className="rounded-sm border border-border bg-white p-6">
+              <p className="text-xs font-semibold uppercase tracking-wide text-text-secondary">
+                Example result
+              </p>
+              <p className="mt-2 text-base leading-relaxed text-text-primary">
+                Compared 1,204 rows by <span className="font-medium">Invoice #</span>. 12 rows added, 3 removed, 47 modified.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-4 text-sm">
+                <span><span className="font-semibold text-green">12</span> <span className="text-text-secondary">Added</span></span>
+                <span><span className="font-semibold text-red">3</span> <span className="text-text-secondary">Removed</span></span>
+                <span><span className="font-semibold text-amber">47</span> <span className="text-text-secondary">Modified</span></span>
+                <span><span className="font-semibold text-text-secondary">1,142</span> <span className="text-text-secondary">Unchanged</span></span>
+              </div>
+              <p className="mt-3 text-sm text-text-secondary">
+                Invoice <span className="font-medium text-text-primary">#4021</span> — Amount <span className="text-red">1,200.00</span> → <span className="text-green">1,320.00</span>, Status <span className="text-red">Pending</span> → <span className="text-green">Paid</span>. Download the full report as Excel or CSV.
+              </p>
             </div>
           )}
 
