@@ -88,10 +88,18 @@ export function analyzeColumns(fileA: ParsedFile, fileB: ParsedFile): ColumnMapp
   const renamed: ColumnMapping["renamed"] = [];
   const renameCandidates: { oldName: string; newName: string; score: number }[] = [];
 
+  // Precompute each unmatched B column's value-set once. Rebuilding it inside
+  // the inner loop was O(colsA × colsB × rows) and could freeze the tab on wide
+  // files near the row cap.
+  const valuesByNewName = new Map<string, Set<string>>();
+  for (const newName of unmatchedB) {
+    valuesByNewName.set(newName, getColumnValues(fileB.rows, newName));
+  }
+
   for (const oldName of unmatchedA) {
     const valuesA = getColumnValues(fileA.rows, oldName);
     for (const newName of unmatchedB) {
-      const valuesB = getColumnValues(fileB.rows, newName);
+      const valuesB = valuesByNewName.get(newName)!;
       const nameScore = nameSimilarity(oldName, newName);
       const contentScore = jaccardSimilarity(valuesA, valuesB);
       const combined = 0.4 * nameScore + 0.6 * contentScore;
@@ -143,10 +151,8 @@ export function analyzeColumns(fileA: ParsedFile, fileB: ParsedFile): ColumnMapp
   return { matched, added, removed, renamed, reordered };
 }
 
-export function buildColumnChanges(mapping: ColumnMapping, fileA: ParsedFile, fileB: ParsedFile): ColumnChange[] {
+export function buildColumnChanges(mapping: ColumnMapping): ColumnChange[] {
   const changes: ColumnChange[] = [];
-  const indexMapA = new Map(fileA.columns.map((c) => [c.name, c.index]));
-  const indexMapB = new Map(fileB.columns.map((c) => [c.name, c.index]));
 
   for (const name of mapping.added) {
     changes.push({ type: "added", columnName: name });
@@ -166,13 +172,10 @@ export function buildColumnChanges(mapping: ColumnMapping, fileA: ParsedFile, fi
     });
   }
   if (mapping.reordered) {
-    changes.push({
-      type: "reordered",
-      details: {
-        oldIndex: indexMapA.get(fileA.columns[0]?.name ?? "") ?? 0,
-        newIndex: indexMapB.get(fileB.columns[0]?.name ?? "") ?? 0,
-      },
-    });
+    // No per-column indices: reorder is a whole-schema observation, and the UI
+    // renders a flat "Columns reordered" label. Carrying bogus indices (they
+    // were always column 0's) was misleading dead data.
+    changes.push({ type: "reordered" });
   }
   return changes;
 }
