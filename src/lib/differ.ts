@@ -68,13 +68,31 @@ export function computeDiff(
     fileB.rows, config.keyColumns, colMetaMapB as any, config
   );
 
+  // A key column the user picked from File A may not exist in File B (e.g. it
+  // was renamed there). Reading it off File B rows yields blank keys for every
+  // row, so everything collapses to added/removed. Warn rather than pretend.
+  const namesB = new Set(fileB.columns.map((c) => c.name));
+  const renamedFromA = new Set(columnMapping.renamed.map((r) => r.oldName));
+  for (const key of config.keyColumns) {
+    if (!namesB.has(key)) {
+      const hint = renamedFromA.has(key)
+        ? " It appears to have been renamed in File B — re-compare using the matching File B column as the key."
+        : "";
+      warnings.push(
+        `Key column "${key}" is not present in File B, so results may be unreliable.${hint}`
+      );
+    }
+  }
+
+  // Report rows *dropped* (occurrences minus the one kept), so the number
+  // agrees with excludedRowCount rather than counting total occurrences.
   if (dupsA.size > 0) {
-    const count = Array.from(dupsA.values()).reduce((sum, arr) => sum + arr.length, 0);
-    warnings.push(`File A has ${count} rows with duplicate key values (${dupsA.size} distinct keys). Only the last occurrence of each is compared.`);
+    const dropped = Array.from(dupsA.values()).reduce((sum, arr) => sum + arr.length - 1, 0);
+    warnings.push(`File A: ${dropped} duplicate row${dropped === 1 ? "" : "s"} across ${dupsA.size} key${dupsA.size === 1 ? "" : "s"} dropped from comparison. Only the last occurrence of each key is compared.`);
   }
   if (dupsB.size > 0) {
-    const count = Array.from(dupsB.values()).reduce((sum, arr) => sum + arr.length, 0);
-    warnings.push(`File B has ${count} rows with duplicate key values (${dupsB.size} distinct keys). Only the last occurrence of each is compared.`);
+    const dropped = Array.from(dupsB.values()).reduce((sum, arr) => sum + arr.length - 1, 0);
+    warnings.push(`File B: ${dropped} duplicate row${dropped === 1 ? "" : "s"} across ${dupsB.size} key${dupsB.size === 1 ? "" : "s"} dropped from comparison. Only the last occurrence of each key is compared.`);
   }
 
   const rowChanges: RowChange[] = [];

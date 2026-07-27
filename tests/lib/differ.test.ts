@@ -321,6 +321,21 @@ describe("computeDiff", () => {
     expect(generateSummary(result)).toBe("Files are identical. No differences found.");
   });
 
+  it("warns when a selected key column is absent from File B", () => {
+    const fileA = makeParsedFile("a.csv", ["id", "name"], [
+      { id: "1", name: "Alice" },
+    ]);
+    const fileB = makeParsedFile("b.csv", ["name"], [
+      { name: "Alice" },
+    ]);
+
+    const result = computeDiff(fileA, fileB, defaultConfig);
+
+    expect(
+      result.warnings.some((w) => w.includes('Key column "id" is not present in File B'))
+    ).toBe(true);
+  });
+
   it("swapping A and B turns added into removed and vice versa", () => {
     const fileA = makeParsedFile("a.csv", ["id", "name"], [
       { id: "1", name: "Alice" },
