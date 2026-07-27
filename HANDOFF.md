@@ -9,6 +9,18 @@ For things that didn't work, see FAILURES.md.
 
 ---
 
+## 2026-07-27
+
+**Started from:** v1.1 polish arc, /improve audit overdue (due 2026-06-19). Clean tree, app live.
+
+**Did:** Ran improve + full code review + UI review. Fixed 9 findings (8 commits): CSV formula-injection neutralization (+6 tests), rename-detection O(n²) fix, missing-key/duplicate-count warnings, silent-export-failure handling, stale auto-detect fix, dead reordered-data removal, landing copy for 30s clarity, example-result card, mobile stacking. Deployed via `git push` → GitHub Actions (local wrangler failed non-interactively).
+
+**State:** All fixes committed, pushed, deployed, verified live (bundle `index-TFhJnsrF.js`). 82 tests pass, TSC + build clean. Tree clean.
+
+**Next:** Decide the blank-key matching question (PLAN.md Improvement History): keep intentional behavior or make blank composite keys non-matchable (rewrites one test). Optional: real-file click-through QA; OG link-preview spot-check.
+
+---
+
 ## 2026-06-23
 
 **Started from:** v1.0 complete, no active arc. Last session 2026-05-22. /improve audit overdue. Clean tree.

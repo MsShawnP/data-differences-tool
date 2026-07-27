@@ -56,3 +56,17 @@ quarto" or "scope, scrollytelling, decoration"]
 **Status:** Resolved
 
 **Tags:** sheetjs, dates, timezone, normalization, cellDates
+
+---
+
+### 2026-07-27 — `npm run deploy` (local wrangler) fails in the agent's non-interactive shell
+
+**Attempted:** Ran `npm run deploy` (`npm run build && npx wrangler pages deploy dist`) to ship the CSV-injection fix.
+
+**Why it didn't work:** The build succeeded, but wrangler aborted: "In a non-interactive environment, it's necessary to set a CLOUDFLARE_API_TOKEN." The agent's shell has no TTY, so wrangler can't run the interactive OAuth login and won't fall back to cached credentials.
+
+**What we tried instead:** Pushed to `main` and let the GitHub Actions workflow (`deploy.yml`) build and deploy using the repo's Cloudflare secrets. Verified live: bundle hash `index-TFhJnsrF.js` served at diff.lailarallc.com. See DECISIONS.md "Deploy via git push."
+
+**Status:** Resolved
+
+**Tags:** deploy, wrangler, cloudflare, ci, non-interactive, github-actions

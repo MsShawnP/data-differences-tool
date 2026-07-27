@@ -67,6 +67,11 @@ Each entry:
 - **Scope:** `src/lib/parser.ts`, dependency `xlsx`
 - **Do not:** Dismiss this permanently. Revisit when ExcelJS adds CSV reading support or a maintained SheetJS fork emerges.
 
+### 2026-07-27 — Deploy via `git push` (GitHub Actions), not local wrangler
+- **Why:** `.github/workflows/deploy.yml` builds and deploys to Cloudflare Pages on every push to `main` (paths-ignore for `*.md`/`docs/**`), using `CLOUDFLARE_API_TOKEN`/`CLOUDFLARE_ACCOUNT_ID` GitHub secrets. Running `npm run deploy` locally through a non-interactive agent shell fails — wrangler demands an API token it can't obtain without an interactive login. Push is the canonical, reproducible deploy path and needs no local Cloudflare auth.
+- **Scope:** Deployment / release
+- **Do not:** Run `npx wrangler pages deploy` from the agent's non-interactive shell expecting it to work. To deploy, push code changes to `main` and let CI ship it. (A `.md`-only push won't trigger a deploy — that's intended.)
+
 ---
 
 ## Data & Schema
