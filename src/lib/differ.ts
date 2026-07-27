@@ -49,7 +49,7 @@ export function computeDiff(
   config: DiffConfig
 ): DiffResult {
   const columnMapping = analyzeColumns(fileA, fileB);
-  const columnChanges = buildColumnChanges(columnMapping, fileA, fileB);
+  const columnChanges = buildColumnChanges(columnMapping);
   const warnings: string[] = [];
 
   // Build column pairs for comparison: exact matches + renamed pairs
