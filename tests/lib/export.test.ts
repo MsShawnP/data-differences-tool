@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { exportToCsv } from "@/lib/export";
+import { exportToCsv, escapeCsvField } from "@/lib/export";
 import type { DiffResult } from "@/types";
 
 function makeDiffResult(overrides: Partial<DiffResult> = {}): DiffResult {
@@ -109,5 +109,35 @@ describe("exportToCsv", () => {
 
     const blob = exportToCsv(result);
     expect(blob.size).toBeGreaterThan(0);
+  });
+});
+
+describe("escapeCsvField — formula injection", () => {
+  it("prefixes a leading = with an apostrophe", () => {
+    expect(escapeCsvField("=SUM(A1:A9)")).toBe("'=SUM(A1:A9)");
+  });
+
+  it("neutralizes a command payload starting with -", () => {
+    expect(escapeCsvField("-2+3+cmd|' /c calc'!A1")).toBe(
+      "'-2+3+cmd|' /c calc'!A1"
+    );
+  });
+
+  it("neutralizes leading + and @ triggers", () => {
+    expect(escapeCsvField("+1+1")).toBe("'+1+1");
+    expect(escapeCsvField("@foo")).toBe("'@foo");
+  });
+
+  it("leaves a plain negative number untouched", () => {
+    expect(escapeCsvField("-100")).toBe("-100");
+    expect(escapeCsvField("-3.25")).toBe("-3.25");
+  });
+
+  it("leaves ordinary text untouched", () => {
+    expect(escapeCsvField("Alice")).toBe("Alice");
+  });
+
+  it("still quotes a neutralized field that also contains a comma", () => {
+    expect(escapeCsvField("=A1,B1")).toBe('"\'=A1,B1"');
   });
 });

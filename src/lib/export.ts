@@ -150,11 +150,24 @@ export function exportToCsv(result: DiffResult): Blob {
   return new Blob([lines.join("\r\n") + "\r\n"], { type: "text/csv" });
 }
 
-function escapeCsvField(value: string): string {
-  if (value.includes(",") || value.includes('"') || value.includes("\n")) {
-    return `"${value.replace(/"/g, '""')}"`;
+// Prevent CSV formula/command injection. A cell whose text begins with =, +,
+// -, @, tab, or CR can be executed as a formula when the report is opened in
+// Excel or Sheets. Values come from untrusted input files, so prefix a lone
+// apostrophe to force text — except plain numbers like "-100", which are safe
+// and must not be mangled.
+export function neutralizeFormula(value: string): string {
+  if (/^[=+\-@\t\r]/.test(value) && !/^-?\d+(\.\d+)?$/.test(value)) {
+    return `'${value}`;
   }
   return value;
+}
+
+export function escapeCsvField(value: string): string {
+  const safe = neutralizeFormula(value);
+  if (safe.includes(",") || safe.includes('"') || safe.includes("\n")) {
+    return `"${safe.replace(/"/g, '""')}"`;
+  }
+  return safe;
 }
 
 export function triggerDownload(blob: Blob, filename: string): void {
