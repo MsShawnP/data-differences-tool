@@ -21,7 +21,7 @@ gate (un-pins both `it.fails` tests), tolerant-matching wording,
 full-column type detection, footer color token, README/CLAUDE.md corrections.
 Pushed and verified live. Bumped CI to actions v5 + Node 24.
 
-**State:** 91 tests, tsc + build clean, tree clean, everything pushed and
+**State:** 90 tests, tsc + build clean, tree clean, everything pushed and
 deployed (bundle `index-g1KV10e-.js` verified live). Untouched: money/currency
 product gap, blank-key matching question.
 
