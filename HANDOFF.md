@@ -9,6 +9,28 @@ For things that didn't work, see FAILURES.md.
 
 ---
 
+## 2026-07-28 15:56
+
+**What changed:** Fixed the Tier C review list — 6 commits: identical-verdict
+column gate (un-pins the two `it.fails` tests), tolerant-matching wording,
+`wasNormalized` surfaced in the UI and both exports, UTC date fallback,
+full-column type detection, footer color token, README/CLAUDE.md corrections.
+
+**Why:** The identical verdict shipped a false sentence to screen and Excel
+when only columns changed. The rest were honesty and accuracy gaps found in
+the same review.
+
+**State:** 90 tests pass, tsc + build clean, tree clean, 6 commits unpushed.
+Verified in the browser: column-only summary sentence, "formatting normalized"
+tag, footer at #595959. Not touched: the money/currency product gap (new arc,
+out of v1.1 scope).
+
+**Next:** Decide on two open items — (1) open an arc for currency-column money
+totals; (2) fix date cells rendering as raw JS Date strings ("Fri Feb 09 2024
+19:00:00 GMT-0500" for a 2024-02-10 date) in RowChanges.tsx:95 and export.ts:38.
+
+---
+
 ## 2026-07-27
 
 **Started from:** v1.1 polish arc, /improve audit overdue (due 2026-06-19). Clean tree, app live.
