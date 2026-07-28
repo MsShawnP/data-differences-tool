@@ -69,9 +69,14 @@ function normalizeDate(value: unknown): string {
   const str = String(value).trim();
   if (str === "") return "";
 
-  // Try each format with strict parsing
+  // Try each format with strict parsing. UTC-anchored like every other branch
+  // of this function: a local-anchored parse happens to produce the right
+  // calendar date today only because the format strings carry no time, so
+  // parse-local + format-local cancel out. That cancellation is a coincidence
+  // of the current DATE_FORMATS list, not a property of the code — add one
+  // time-bearing format and it breaks.
   for (const fmt of DATE_FORMATS) {
-    const parsed = dayjs(str, fmt, true);
+    const parsed = dayjs.utc(str, fmt, true);
     if (parsed.isValid()) {
       return parsed.format("YYYY-MM-DD");
     }

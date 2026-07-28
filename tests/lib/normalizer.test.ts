@@ -88,6 +88,14 @@ describe("normalizeValue", () => {
       expect(normalizeValue(45306, dateColumn, defaultConfig)).toBe("2024-01-15");
     });
 
+    it("anchors strict-format parsing in UTC too", () => {
+      // Every branch of normalizeDate is UTC-anchored, not just the ones that
+      // produced a wrong date. Run under TZ=America/New_York to confirm.
+      expect(normalizeValue("01/15/2024", dateColumn, defaultConfig)).toBe("2024-01-15");
+      expect(normalizeValue("2024-01-15", dateColumn, defaultConfig)).toBe("2024-01-15");
+      expect(normalizeValue("Jan 15, 2024", dateColumn, defaultConfig)).toBe("2024-01-15");
+    });
+
     it("keeps a UTC timestamp on its UTC calendar date", () => {
       // 02:00Z is the previous day in every negative-offset zone. Formatting in
       // local time would return 2024-01-14 for a US-based user.
