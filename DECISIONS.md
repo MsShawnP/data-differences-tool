@@ -102,6 +102,11 @@ Each entry:
 
 ## Writing & Voice
 
+### 2026-07-28 — Prevention rules are scoped to the surface, not the repro
+- **Why:** A rule written against the input that reproduced reads as complete and is not. The 2026-05-22 rule "default to UTC methods for date normalization" named the `Date`-object branch of `normalizeDate`; the string fallback in the same function violated it for fourteen months, with the doc sitting in `docs/solutions/` the whole time. A narrow rule is worse than no rule — it occupies the slot the correct rule would fill and tells every future reader the area is handled. Companion heuristic: when you find a guard, check what it doesn't guard, because its existence is what stopped the last person looking.
+- **Scope:** Global — every Prevention section in `docs/solutions/`, every DECISIONS.md "Do not," and any review of a fix that landed where the bug was reported
+- **Do not:** File a prevention rule that a reader could satisfy while leaving an identical defect three lines away. Name the function or surface and enumerate its branches. Full statement: `docs/solutions/conventions/prevention-rules-are-scoped-to-the-surface.md`.
+
 ### 2026-07-28 — Never tell the user the files are "identical"
 - **Why:** Comparison is deliberately tolerant — whitespace, number formatting, and date formats are normalized away, rows are matched on key columns only, and duplicate/blank-key rows are excluded. The tool therefore cannot assert byte-identity, and "Files are identical. No differences found." was a claim it had no evidence for. Verdicts now state what was actually checked: "No material differences after tolerant matching." The same gate also reports column changes, which it previously ignored entirely.
 - **Scope:** `src/lib/summary-generator.ts` and any future verdict text

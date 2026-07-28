@@ -107,11 +107,14 @@ Two independent errors sat in the same four lines.
 
 - **Fix shared output paths at the source.** The Excel report was wrong because it reused the summary function. That coupling made the bug wider but the fix narrower — one edit corrected both surfaces. Prefer a single generator over per-surface copies of user-facing prose. See DECISIONS.md — "The download must disclose everything the screen discloses."
 
-- **Widen the audit when a hedge is added.** The `excludedRowCount` hedge was added because the verdict was found to be untrustworthy. That is the moment to ask what *else* the verdict ignores, not to declare the verdict fixed.
+- **The guard that stopped the search.** This is the failure mode worth naming, because it is not a plain miss and it is harder to catch than one. A partial fix that raises *apparent* rigor is worse than no fix at all: the next reviewer sees a guard, reads it as evidence the area was audited, and moves on. The `excludedRowCount` hedge was added precisely because the verdict had been found untrustworthy — and it is why the column hole then survived a review whose stated subject was verdict honesty. The guard is what stopped the search.
+
+  As a review heuristic: **when you find a guard, check what it doesn't guard.** Its existence is the reason the last person stopped looking. Adding a hedge is the moment to ask what *else* the conclusion ignores, not the moment to declare the conclusion fixed. See `docs/solutions/conventions/prevention-rules-are-scoped-to-the-surface.md`.
 
 ## Related Issues
 
-- `docs/solutions/bugs/sheetjs-date-parsing-timezone-offset.md` — same module family, and a live example of the "prevention rule scoped too narrowly" failure mode. Its rule "default to UTC methods for date normalization" named only the `Date`-object branch of `normalizeDate`; the string-fallback branch in the same function still called `dayjs(str).format(...)` and was fixed on 2026-07-28. That doc's Prevention section should be widened to "every branch of the normalizer," not just the one that reproduced. Worth a `/ce-compound-refresh sheetjs-date-parsing-timezone-offset`.
+- `docs/solutions/conventions/prevention-rules-are-scoped-to-the-surface.md` — the general rule, and the home of the guard heuristic above
+- `docs/solutions/bugs/sheetjs-date-parsing-timezone-offset.md` — same audit cycle, same shape one layer up: its prevention rule named the `Date`-object branch that reproduced, and the string fallback in the same function stayed broken for fourteen months. Refreshed 2026-07-28; the rule is now scoped to the whole function.
 - PLAN.md section 7 — the `it.fails` pin and the instruction not to remove a marker without doing the fix.
 - PLAN.md section 8 — the full Tier C review list this fix came from.
 - DECISIONS.md — "Never tell the user the files are identical" (2026-07-28), "The download must disclose everything the screen discloses" (2026-07-28).
