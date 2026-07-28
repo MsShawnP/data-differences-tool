@@ -9,6 +9,51 @@ For things that didn't work, see FAILURES.md.
 
 ---
 
+## 2026-07-28 18:56 — STOPPED HERE
+
+**Started from:** The 18:00 wrap entry below. Session continued past it with a
+`/ce-compound` pass, a `/ce-compound-refresh`, and a date-display fix.
+
+**Did (after the 18:00 wrap):**
+- `93eea80` — wrote `docs/solutions/logic-errors/identical-verdict-ignored-column-changes.md`; widened the `docs/solutions/` line in CLAUDE.md
+- `3eadc58` — UTC-anchored the strict-format branch of `normalizeDate`, the last local-anchored one
+- `4fd59ba` — refreshed the SheetJS date doc; created the prevention-rule-scoping convention
+- `de2437a` — moved that convention to portfolio root; filed the Tokyo defect as PLAN.md task 9
+- `16537dd` — **UNPUSHED.** `src/lib/display.ts` + `formatCellValue`, replacing `String(cell.value)` in RowChanges.tsx, export.ts, and summary-generator.ts. Closes PLAN.md task 10.
+
+**State:** Tree clean. 100 tests pass, tsc clean, build clean, verified under
+both `TZ=America/New_York` and `TZ=Asia/Tokyo`. One commit (`16537dd`) is
+committed locally but NOT pushed and NOT deployed — deliberate, the session was
+stopped before either. Everything through `de2437a` is live.
+
+Note: a stale zero-byte `.git/index.lock` blocked the first commit attempt (no
+git process was running). Removed it and the commit went through. Mentioning it
+only so a `.git` oddity later isn't a mystery.
+
+**Next — one step, in order:**
+1. `git push` from this repo. That triggers `.github/workflows/deploy.yml` and
+   ships `16537dd` to diff.lailarallc.com. Verify after: the live bundle hash
+   should change, and `curl -s https://diff.lailarallc.com/assets/index-*.js`
+   should contain `formatCellValue`'s output shape. Nothing else is pending.
+2. Then the next real piece of work is PLAN.md task 9 (east-of-UTC dates in the
+   `Date`-object branch of `normalizeDate`). It is the last non-UTC-safe branch
+   and display now inherits its exposure by design.
+
+**Do not** start the currency/money arc (PLAN.md task 8, product gap) without
+saying so — it is a feature and out of scope for the v1.1 polish arc.
+
+**Cross-repo work from this session, both already pushed, nothing pending:**
+- `reference/prevention-rule-scoping.md` — new portfolio-level convention
+- `reference/lailara-design-system/CSS_TOKEN_AUDIT.md` — new (`24b1f48`)
+- `sku-rationalization-framework` — CSS convention replaced with a pointer
+- `~/.claude/CLAUDE.md` — one line under "Best practices baked in" pointing at
+  the scoping rule
+- `~/.claude/commands/wrap.md` — new required **Sibling surfaces** field in the
+  session summary, a rule enforcing it, and a Step 2 clause requiring an
+  unfixed sibling to become a tracked item
+
+---
+
 ## 2026-07-28 18:00
 
 **Started from:** v1.1 polish arc, clean tree, app live. A Tier C review list
