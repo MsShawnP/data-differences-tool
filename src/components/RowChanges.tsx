@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import type { RowChange } from "@/types";
+import { formatCellValue } from "@/lib/display";
 
 interface RowChangesProps {
   changes: RowChange[];
@@ -100,10 +101,10 @@ export function RowChanges({ changes, keyColumns }: RowChangesProps) {
                               )}
                             </td>
                             <td className="py-0.5 pr-4 text-red">
-                              {String(cell.oldValue ?? "")}
+                              {formatCellValue(cell.oldValue)}
                             </td>
                             <td className="py-0.5 text-green">
-                              {String(cell.newValue ?? "")}
+                              {formatCellValue(cell.newValue)}
                             </td>
                           </tr>
                         ))}

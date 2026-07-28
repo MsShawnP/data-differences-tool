@@ -118,10 +118,17 @@ A ship date of 2024-02-10 displays as "Fri Feb 09 2024 19:00:00 GMT-0500" —
 wrong day, in a finance-facing report. The differ stores the raw cell value
 and both the UI and the exports call `String()` on it.
 
-- [ ] `src/components/RowChanges.tsx:95` (old/new value cells) and
+- [x] `src/components/RowChanges.tsx:95` (old/new value cells) and
       `src/lib/export.ts:38` — format `Date` values as `YYYY-MM-DD` for
       display. The normalizer already has the UTC extraction logic; the
       display path never used it. Add a test for the export row content.
+      Done 2026-07-28. A third surface the entry did not name:
+      `src/lib/summary-generator.ts:153` stringifies the same values to build
+      the plain-English transition sentence, so the summary carried the bug
+      too. All three now call `formatCellValue` in `src/lib/display.ts`; 9
+      tests added. Display is UTC-anchored and therefore inherits task 9's
+      east-of-UTC exposure by design — when 9 lands, screen, exports and
+      summary all move with it rather than disagreeing.
 
 ## Definition of done for this arc
 

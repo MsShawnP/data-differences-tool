@@ -1,4 +1,5 @@
 import type { DiffResult } from "@/types";
+import { formatCellValue } from "@/lib/display";
 
 export function generateSummary(result: DiffResult): string {
   const { summary, rowChanges, columnChanges } = result;
@@ -150,8 +151,8 @@ function detectMostCommonChange(
         transitionCounts.set(change.column, []);
       }
       const transitions = transitionCounts.get(change.column)!;
-      const from = String(change.oldValue ?? "");
-      const to = String(change.newValue ?? "");
+      const from = formatCellValue(change.oldValue);
+      const to = formatCellValue(change.newValue);
       const existing = transitions.find((t) => t.from === from && t.to === to);
       if (existing) {
         existing.count++;

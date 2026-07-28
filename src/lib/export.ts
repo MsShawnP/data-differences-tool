@@ -1,6 +1,7 @@
 import type ExcelJSType from "exceljs";
 import type { DiffResult, RowChange } from "@/types";
 import { generateSummary } from "@/lib/summary-generator";
+import { formatCellValue } from "@/lib/display";
 
 let ExcelJS: typeof ExcelJSType;
 
@@ -41,8 +42,8 @@ function buildExportRows(result: DiffResult): ExportRow[] {
           key,
           changeType: "Modified",
           column: cell.column,
-          oldValue: String(cell.oldValue ?? ""),
-          newValue: String(cell.newValue ?? ""),
+          oldValue: formatCellValue(cell.oldValue),
+          newValue: formatCellValue(cell.newValue),
           normalized: cell.wasNormalized ? "Yes" : "",
         });
       }
