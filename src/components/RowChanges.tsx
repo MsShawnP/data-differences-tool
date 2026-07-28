@@ -90,6 +90,14 @@ export function RowChanges({ changes, keyColumns }: RowChangesProps) {
                           <tr key={ci}>
                             <td className="py-0.5 pr-4 font-medium text-text-primary">
                               {cell.column}
+                              {/* Comparison is tolerant. Say so when it mattered
+                                  for this cell, so the reader knows the raw
+                                  values also differ in formatting. */}
+                              {cell.wasNormalized && (
+                                <span className="ml-1.5 text-xs font-normal text-text-secondary">
+                                  formatting normalized
+                                </span>
+                              )}
                             </td>
                             <td className="py-0.5 pr-4 text-red">
                               {String(cell.oldValue ?? "")}

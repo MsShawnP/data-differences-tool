@@ -17,7 +17,13 @@ interface ExportRow {
   column: string;
   oldValue: string;
   newValue: string;
+  // "Yes" when the two values were compared after normalizing formatting
+  // (whitespace, number format, date format). Blank otherwise. Disclosing this
+  // keeps the report honest about what "different" means.
+  normalized: string;
 }
+
+const EXPORT_HEADERS = ["Key", "Change Type", "Column", "Old Value", "New Value", "Normalized"];
 
 function buildExportRows(result: DiffResult): ExportRow[] {
   const rows: ExportRow[] = [];
@@ -26,9 +32,9 @@ function buildExportRows(result: DiffResult): ExportRow[] {
     const key = formatKey(change, result.keyColumnsUsed);
 
     if (change.type === "added") {
-      rows.push({ key, changeType: "Added", column: "", oldValue: "", newValue: "" });
+      rows.push({ key, changeType: "Added", column: "", oldValue: "", newValue: "", normalized: "" });
     } else if (change.type === "removed") {
-      rows.push({ key, changeType: "Removed", column: "", oldValue: "", newValue: "" });
+      rows.push({ key, changeType: "Removed", column: "", oldValue: "", newValue: "", normalized: "" });
     } else if (change.type === "modified") {
       for (const cell of change.changes) {
         rows.push({
@@ -37,6 +43,7 @@ function buildExportRows(result: DiffResult): ExportRow[] {
           column: cell.column,
           oldValue: String(cell.oldValue ?? ""),
           newValue: String(cell.newValue ?? ""),
+          normalized: cell.wasNormalized ? "Yes" : "",
         });
       }
     }
@@ -75,14 +82,13 @@ export async function exportToExcel(result: DiffResult): Promise<Blob> {
 
   // Sheet 2: Changes
   const changesSheet = workbook.addWorksheet("Changes");
-  const headers = ["Key", "Change Type", "Column", "Old Value", "New Value"];
-  const headerRow = changesSheet.addRow(headers);
+  const headerRow = changesSheet.addRow(EXPORT_HEADERS);
   headerRow.font = { bold: true };
 
   const exportRows = buildExportRows(result);
 
   if (exportRows.length === 0) {
-    changesSheet.addRow(["No differences found", "", "", "", ""]);
+    changesSheet.addRow(["No row differences found", "", "", "", "", ""]);
   }
 
   const greenFill: ExcelJSType.FillPattern = {
@@ -108,6 +114,7 @@ export async function exportToExcel(result: DiffResult): Promise<Blob> {
       row.column,
       row.oldValue,
       row.newValue,
+      row.normalized,
     ]);
 
     let fill: ExcelJSType.FillPattern | undefined;
@@ -127,6 +134,7 @@ export async function exportToExcel(result: DiffResult): Promise<Blob> {
   changesSheet.getColumn(3).width = 18;
   changesSheet.getColumn(4).width = 25;
   changesSheet.getColumn(5).width = 25;
+  changesSheet.getColumn(6).width = 12;
 
   const buffer = await workbook.xlsx.writeBuffer();
   return new Blob([buffer], {
@@ -136,12 +144,11 @@ export async function exportToExcel(result: DiffResult): Promise<Blob> {
 
 export function exportToCsv(result: DiffResult): Blob {
   const exportRows = buildExportRows(result);
-  const headers = ["Key", "Change Type", "Column", "Old Value", "New Value"];
-  const lines: string[] = [headers.map(escapeCsvField).join(",")];
+  const lines: string[] = [EXPORT_HEADERS.map(escapeCsvField).join(",")];
 
   for (const row of exportRows) {
     lines.push(
-      [row.key, row.changeType, row.column, row.oldValue, row.newValue]
+      [row.key, row.changeType, row.column, row.oldValue, row.newValue, row.normalized]
         .map(escapeCsvField)
         .join(",")
     );

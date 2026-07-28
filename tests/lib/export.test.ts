@@ -80,6 +80,44 @@ describe("exportToCsv", () => {
     expect(blob.size).toBeGreaterThan(0);
   });
 
+  it("discloses which cells were compared after normalizing formatting", async () => {
+    const result = makeDiffResult({
+      summary: {
+        totalRowsA: 2,
+        totalRowsB: 2,
+        addedCount: 0,
+        removedCount: 0,
+        modifiedCount: 2,
+        unchangedCount: 0,
+      },
+      rowChanges: [
+        {
+          type: "modified",
+          keyValues: { id: "1" },
+          rowIndex: 0,
+          changes: [
+            { column: "shipped", oldValue: "2026-01-05", newValue: "1/6/2026", wasNormalized: true },
+          ],
+        },
+        {
+          type: "modified",
+          keyValues: { id: "2" },
+          rowIndex: 1,
+          changes: [
+            { column: "status", oldValue: "open", newValue: "closed", wasNormalized: false },
+          ],
+        },
+      ],
+    });
+
+    const text = await exportToCsv(result).text();
+    const lines = text.trim().split("\r\n");
+
+    expect(lines[0]).toBe("Key,Change Type,Column,Old Value,New Value,Normalized");
+    expect(lines[1]).toBe("1,Modified,shipped,2026-01-05,1/6/2026,Yes");
+    expect(lines[2]).toBe("2,Modified,status,open,closed,");
+  });
+
   it("properly escapes fields with commas and quotes", () => {
     const result = makeDiffResult({
       summary: {
