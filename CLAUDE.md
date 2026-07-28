@@ -18,11 +18,15 @@ between these two versions of this data, explained in plain language?
 
 ## Stack and tools
 
-- Primary language: TBD (deciding during brainstorm)
-- Key packages/libraries: TBD
-- Database: None (client-side or serverless, no persistence)
-- Entry point: TBD
-- Hosting: Cloudflare Pages (default for demos)
+- Primary language: TypeScript (React 19 + Vite 6, Tailwind CSS v4)
+- Key packages/libraries: SheetJS `xlsx` (parsing), ExcelJS (styled export),
+  dayjs (date normalization), react-dropzone (upload), Vitest (tests)
+- Database: None. Everything runs in the browser; no upload, no persistence.
+- Entry point: `index.html` → `src/main.tsx` → `src/App.tsx`.
+  Diff logic lives in `src/lib/` (parser, normalizer, column-detector,
+  differ, summary-generator, export).
+- Hosting: Cloudflare Pages at https://diff.lailarallc.com,
+  deployed by GitHub Actions on push to main
 
 Tier: Medium
 
