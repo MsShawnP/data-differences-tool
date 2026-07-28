@@ -45,7 +45,7 @@ export default function App() {
           )}
 
           {state.step === "idle" && (
-            <div className="rounded-sm border border-border bg-white p-6">
+            <div className="rounded-sm border border-border bg-surface p-6">
               <p className="text-xs font-semibold uppercase tracking-wide text-text-secondary">
                 Example result
               </p>

@@ -36,7 +36,7 @@ export function DownloadOptions({ result }: DownloadOptionsProps) {
   }
 
   return (
-    <div className="rounded-sm border border-border bg-white p-6">
+    <div className="rounded-sm border border-border bg-surface p-6">
       <h3 className="mb-3 font-serif text-lg font-bold text-text-primary">
         Download Report
       </h3>

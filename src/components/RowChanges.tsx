@@ -50,7 +50,7 @@ export function RowChanges({ changes, keyColumns }: RowChangesProps) {
       )}
 
       {modified.length > 0 && (
-        <div className="rounded-sm border border-border bg-white p-6">
+        <div className="rounded-sm border border-border bg-surface p-6">
           <h3 className="mb-3 font-serif text-lg font-bold text-text-primary">
             Modified Rows ({modified.length})
           </h3>
@@ -172,7 +172,7 @@ function ChangeSection({
   const pageRows = rows.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
 
   return (
-    <div className="rounded-sm border border-border bg-white p-6">
+    <div className="rounded-sm border border-border bg-surface p-6">
       <h3 className="mb-3 font-serif text-lg font-bold text-text-primary">{title}</h3>
       <div className="space-y-1">
         {pageRows.map((row, i) => {

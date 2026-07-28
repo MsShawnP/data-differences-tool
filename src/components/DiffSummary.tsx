@@ -10,7 +10,7 @@ export function DiffSummary({ result }: DiffSummaryProps) {
   const excludedRowCount = result.summary.excludedRowCount ?? 0;
 
   return (
-    <div className="rounded-sm border border-border bg-white p-6">
+    <div className="rounded-sm border border-border bg-surface p-6">
       <p className="text-base leading-relaxed text-text-primary">{summary}</p>
       <div className="mt-4 flex flex-wrap gap-4 text-sm">
         <Stat label="Added" value={result.summary.addedCount} color="text-green" />
