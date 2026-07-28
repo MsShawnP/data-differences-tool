@@ -96,11 +96,11 @@ export default function App() {
         </main>
 
         <footer className="mt-16 border-t border-border pt-6 pb-8 text-center">
-          <p className="text-sm text-warm-gray">
+          <p className="text-sm text-text-secondary">
             Built by{" "}
             <a
               href="https://lailarallc.com"
-              className="text-warm-gray underline hover:text-text-primary"
+              className="text-text-secondary underline hover:text-text-primary"
               target="_blank"
               rel="noopener noreferrer"
             >
