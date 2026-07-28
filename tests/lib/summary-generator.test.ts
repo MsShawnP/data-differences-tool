@@ -27,6 +27,32 @@ describe("generateSummary", () => {
     expect(summary).toBe("Files are identical. No differences found.");
   });
 
+  // Un-pinned. makeDiffResult() hardcodes columnChanges: [], and every case in
+  // this file took that default, so no test could reach the state where the row
+  // sets match but the columns changed. generateSummary destructures only
+  // { summary, rowChanges } (summary-generator.ts:4) and its identical-verdict
+  // gate at :13 never consults columnChanges, so adding a column to an
+  // otherwise-unchanged file yields "Files are identical. No differences
+  // found." The same sentence is written to Excel at export.ts:60.
+  //
+  // it.fails is vitest's strict xfail: the suite stays green while the bug is
+  // live, and this turns into a failure the moment the gate is fixed, so the
+  // marker cannot silently outlive the defect.
+  // Tracked in PLAN.md — "Identical verdict ignores column changes".
+  it.fails("does not claim identical when a column was added but no row changed", () => {
+    const result = makeDiffResult({
+      columnChanges: [{ type: "added", columnName: "discount" }],
+    });
+    expect(generateSummary(result)).not.toBe("Files are identical. No differences found.");
+  });
+
+  it.fails("leads with the column finding when rows match but columns changed", () => {
+    const result = makeDiffResult({
+      columnChanges: [{ type: "added", columnName: "discount" }],
+    });
+    expect(generateSummary(result)).toContain("discount");
+  });
+
   it("reports only additions", () => {
     const result = makeDiffResult({
       summary: {

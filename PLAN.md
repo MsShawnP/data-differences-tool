@@ -52,6 +52,24 @@ overdue. This is a 30–60 minute pass, not a feature arc.
 - [ ] Verify live at diff.lailarallc.com
 - [ ] Spot-check OG preview (paste URL in Slack or https://metatags.io)
 
+### 7. Un-pinned defect — test is waiting, fix is not written
+
+Added 2026-07-28 by the FIX-LIST cross-repo test sweep. `it.fails` is vitest's
+strict xfail: the suite fails loudly the moment the fix lands and the marker
+has to come off. Do not remove a marker without doing the fix.
+
+- [ ] **Identical verdict ignores column changes.**
+      `src/lib/summary-generator.ts:13` — the identical-verdict gate checks
+      only added/removed/modified row counts, so a file whose rows all match
+      but which gained a column reports "Files are identical. No differences
+      found." Add `result.columnChanges.length === 0` to the gate and lead
+      with the column finding ("No row values changed. 1 column added:
+      discount."). The same sentence is written to Excel at
+      `src/lib/export.ts:60` — fix both in one commit. Tests:
+      `tests/lib/summary-generator.test.ts` —
+      `does not claim identical when a column was added but no row changed`,
+      `leads with the column finding when rows match but columns changed`.
+
 ## Definition of done for this arc
 
 - [ ] Link preview in Slack/iMessage shows title + description (not blank)
