@@ -103,7 +103,9 @@ SheetJS stores all date-like cells as Date objects regardless of source format, 
 
 The serial offset fix (25569 not 25570) aligns with the Lotus 1-2-3 epoch: Excel intentionally treats 1900 as a leap year for backward compatibility, making Jan 1, 1970 = serial 25569.
 
-**Known limitation, unchanged as of 2026-07-28.** The slash-format reasoning above holds for negative UTC offsets only. East of UTC, a slash-format date that SheetJS parsed as local midnight falls on the *previous* UTC day (midnight Jan 15 in Tokyo is 15:00 Jan 14 UTC), so the `Date`-object branch can still extract the wrong calendar date there. That branch was not touched in the 2026-07-28 pass — only the two string branches were, and both are now UTC-anchored end to end (verified under `TZ=Asia/Tokyo`). Fixing the `Date`-object case properly means not relying on SheetJS's timezone anchoring at all.
+**Open defect, tracked in PLAN.md section 9.** The slash-format reasoning above holds for negative UTC offsets only. East of UTC, a slash-format date that SheetJS parsed as local midnight falls on the *previous* UTC day (midnight Jan 15 in Tokyo is 15:00 Jan 14 UTC), so the `Date`-object branch can still extract the wrong calendar date there. That branch was not touched in the 2026-07-28 pass — only the two string branches were, and both are now UTC-anchored end to end (verified under `TZ=Asia/Tokyo`). Fixing it properly means not relying on SheetJS's timezone anchoring at all.
+
+This sat in this doc as a caveat from 2026-05-22 ("acceptable for v1") and was never filed as work. It is now a PLAN.md item. A live defect recorded only in prose has the same half-life as a prevention rule written and never widened — see `docs/solutions/conventions/prevention-rules-are-scoped-to-the-surface.md`.
 
 ## Prevention
 

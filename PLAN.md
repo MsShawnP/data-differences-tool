@@ -94,7 +94,25 @@ Seven of eight findings fixed this session, one commit each.
       feature, out of scope for the v1.1 polish arc. Candidate for the
       next arc.
 
-### 9. Found while verifying — date cells render as raw JS Date strings
+### 9. Open defect — dates shift east of UTC in the Date-object branch
+
+Known since 2026-05-22, recorded only as a doc caveat until now. Filing it as
+work: a documented-but-untracked defect has the same half-life as a
+prevention rule that was written and never widened — which is exactly what
+this project just spent a session learning.
+
+- [ ] `src/lib/normalizer.ts:61` — SheetJS parses slash-format dates as *local*
+      midnight. East of UTC, local midnight is the previous UTC day (midnight
+      Jan 15 in Tokyo is 15:00 Jan 14 UTC), so the `Date`-object branch's
+      `getUTC*` extraction returns the wrong calendar date there. Negative
+      offsets are unaffected, which is why it survived: every test and every
+      session has run in US Eastern. Both string branches are already UTC-safe
+      (verified under `TZ=Asia/Tokyo`); this is the last branch that is not.
+      The fix means not trusting SheetJS's timezone anchoring at all —
+      likely reading the raw cell text rather than the parsed `Date`. Add a
+      `TZ=Asia/Tokyo` case to the suite as part of it.
+
+### 10. Found while verifying — date cells render as raw JS Date strings
 
 A ship date of 2024-02-10 displays as "Fri Feb 09 2024 19:00:00 GMT-0500" —
 wrong day, in a finance-facing report. The differ stores the raw cell value
