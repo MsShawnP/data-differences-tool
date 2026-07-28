@@ -51,6 +51,21 @@ describe("parseFile", () => {
     expect(result.columns[1]?.detectedType).toBe("text");
   });
 
+  it("detects a mixed-type column when the off-type values appear past row 100", async () => {
+    // Type detection used to sample the first 100 data rows, so a column that
+    // is uniform through row 100 and mixed below it was typed for the whole
+    // file from its first hundred values.
+    const rows = Array.from({ length: 120 }, (_, i) => `${i + 1},${1000 + i}`);
+    rows.push("121,N/A");
+    const csvContent = `id,code\n${rows.join("\n")}\n`;
+    const file = new File([csvContent], "late-mixed.csv", { type: "text/csv" });
+    const result = await parseFile(file);
+
+    expect(result.rowCount).toBe(121);
+    expect(result.columns[1]?.name).toBe("code");
+    expect(result.columns[1]?.detectedType).toBe("text");
+  });
+
   it("names a blank-header column to match its row key so its values compare", async () => {
     // Middle column has no header. SheetJS keys its values as "__EMPTY";
     // the column metadata name must match, or the column never compares.

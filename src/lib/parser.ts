@@ -48,8 +48,8 @@ export async function parseFile(file: File): Promise<ParsedFile> {
 
 /**
  * Detect column headers and types from a sheet.
- * Scans up to the first 100 data rows, using majority-vote
- * on SheetJS cell `.t` properties to determine each column's type.
+ * Scans every data row, reading SheetJS cell `.t` properties to
+ * determine each column's type (see resolveColumnType).
  */
 function detectColumns(sheet: XLSXTypes.WorkSheet): ColumnMetadata[] {
   const range = XLSX.utils.decode_range(sheet["!ref"] ?? "A1");
@@ -85,10 +85,13 @@ function detectColumns(sheet: XLSXTypes.WorkSheet): ColumnMetadata[] {
 
     const typeCounts: Record<string, number> = {};
     let formatString: string | undefined;
-    const maxScanRows = Math.min(range.e.r, range.s.r + 100);
 
-    // Scan data rows (skip header row at range.s.r)
-    for (let row = range.s.r + 1; row <= maxScanRows; row++) {
+    // Scan every data row (skip header row at range.s.r). A 100-row sample
+    // mistyped any column that is uniform through row 100 and mixed below it —
+    // a text ID column that turns numeric partway down, say — and the type
+    // drives normalization for the whole file. Cost is one lookup per cell,
+    // the same order as the sheet_to_json pass that follows.
+    for (let row = range.s.r + 1; row <= range.e.r; row++) {
       const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
       const cell = sheet[cellAddress] as
         | { t: "b" | "e" | "n" | "d" | "s" | "z"; z?: string }
