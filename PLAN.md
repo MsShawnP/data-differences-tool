@@ -58,7 +58,9 @@ Added 2026-07-28 by the FIX-LIST cross-repo test sweep. `it.fails` is vitest's
 strict xfail: the suite fails loudly the moment the fix lands and the marker
 has to come off. Do not remove a marker without doing the fix.
 
-- [ ] **Identical verdict ignores column changes.**
+- [x] **Identical verdict ignores column changes.** Fixed 2026-07-28: the gate
+      now consults `columnChanges` and leads with the column finding. Both
+      un-pinned tests are live, plus three new cases.
       `src/lib/summary-generator.ts:13` — the identical-verdict gate checks
       only added/removed/modified row counts, so a file whose rows all match
       but which gained a column reports "Files are identical. No differences

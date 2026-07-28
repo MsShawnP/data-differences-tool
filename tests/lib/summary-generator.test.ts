@@ -21,36 +21,63 @@ function makeDiffResult(overrides: Partial<DiffResult> = {}): DiffResult {
 }
 
 describe("generateSummary", () => {
-  it("reports identical files", () => {
+  it("reports no material differences when nothing changed", () => {
     const result = makeDiffResult();
     const summary = generateSummary(result);
-    expect(summary).toBe("Files are identical. No differences found.");
+    // Never "identical": matching is tolerant, so equivalent files can still
+    // differ in whitespace, number formatting, and date formats.
+    expect(summary).toContain("No material differences after tolerant matching");
   });
 
-  // Un-pinned. makeDiffResult() hardcodes columnChanges: [], and every case in
-  // this file took that default, so no test could reach the state where the row
-  // sets match but the columns changed. generateSummary destructures only
-  // { summary, rowChanges } (summary-generator.ts:4) and its identical-verdict
-  // gate at :13 never consults columnChanges, so adding a column to an
-  // otherwise-unchanged file yields "Files are identical. No differences
-  // found." The same sentence is written to Excel at export.ts:60.
-  //
-  // it.fails is vitest's strict xfail: the suite stays green while the bug is
-  // live, and this turns into a failure the moment the gate is fixed, so the
-  // marker cannot silently outlive the defect.
-  // Tracked in PLAN.md — "Identical verdict ignores column changes".
-  it.fails("does not claim identical when a column was added but no row changed", () => {
+  it("does not claim no differences when a column was added but no row changed", () => {
     const result = makeDiffResult({
       columnChanges: [{ type: "added", columnName: "discount" }],
     });
-    expect(generateSummary(result)).not.toBe("Files are identical. No differences found.");
+    expect(generateSummary(result)).not.toContain("No material differences");
   });
 
-  it.fails("leads with the column finding when rows match but columns changed", () => {
+  it("leads with the column finding when rows match but columns changed", () => {
     const result = makeDiffResult({
       columnChanges: [{ type: "added", columnName: "discount" }],
     });
-    expect(generateSummary(result)).toContain("discount");
+    expect(generateSummary(result)).toBe("No row values changed. 1 column added: discount.");
+  });
+
+  it("names removed, renamed, and reordered columns when no row changed", () => {
+    const result = makeDiffResult({
+      columnChanges: [
+        { type: "removed", columnName: "notes" },
+        {
+          type: "renamed",
+          details: { oldName: "qty", newName: "quantity", confidence: 0.9 },
+        },
+        { type: "reordered" },
+      ],
+    });
+
+    const summary = generateSummary(result);
+    expect(summary).toBe(
+      "No row values changed. 1 column removed: notes. 1 column renamed: qty → quantity. Columns reordered."
+    );
+  });
+
+  it("reports column changes alongside excluded rows when no row changed", () => {
+    const result = makeDiffResult({
+      summary: {
+        totalRowsA: 100,
+        totalRowsB: 100,
+        addedCount: 0,
+        removedCount: 0,
+        modifiedCount: 0,
+        unchangedCount: 98,
+        excludedRowCount: 2,
+      },
+      columnChanges: [{ type: "added", columnName: "discount" }],
+    });
+
+    const summary = generateSummary(result);
+    expect(summary).toContain("2 rows could not be matched");
+    expect(summary).toContain("1 column added: discount.");
   });
 
   it("reports only additions", () => {

@@ -306,7 +306,7 @@ describe("computeDiff", () => {
     expect(generateSummary(result)).not.toBe("Files are identical. No differences found.");
   });
 
-  it("still reports identical when there are no duplicate or blank keys", () => {
+  it("reports no material differences when there are no duplicate or blank keys", () => {
     const rows = [
       { id: "1", value: "x" },
       { id: "2", value: "y" },
@@ -318,7 +318,7 @@ describe("computeDiff", () => {
 
     expect(result.summary.excludedRowCount).toBe(0);
     expect(result.summary.distinctKeysA).toBe(2);
-    expect(generateSummary(result)).toBe("Files are identical. No differences found.");
+    expect(generateSummary(result)).toContain("No material differences after tolerant matching");
   });
 
   it("warns when a selected key column is absent from File B", () => {
