@@ -70,3 +70,47 @@ quarto" or "scope, scrollytelling, decoration"]
 **Status:** Resolved
 
 **Tags:** deploy, wrangler, cloudflare, ci, non-interactive, github-actions
+
+---
+
+### 2026-07-28 — PowerShell here-string in the Bash tool corrupted a commit subject
+
+**Attempted:** Passed a multi-line commit message to `git commit -m` using a
+PowerShell here-string (`@'` … `'@`) from the Bash tool.
+
+**Why it didn't work:** The Bash tool is Git Bash (POSIX sh), not PowerShell.
+The `@'` delimiter is not shell syntax, so it was passed through as literal
+text — the commit subject became `@` and the real headline dropped to line 2.
+
+**What we tried instead:** Wrote the message to a file in the scratchpad and
+used `git commit -F <file>`. Amended the bad commit the same way. This is now
+the default for any commit message longer than one line.
+
+**Status:** Resolved
+
+**Tags:** git, commit, bash, powershell, here-string, tooling
+
+---
+
+### 2026-07-28 — Whitespace around a numeric CSV value does not trigger `wasNormalized`
+
+**Attempted:** To verify the new "formatting normalized" tag in the browser,
+fed File A a value of `" 200.00 "` against File B's `250`, expecting
+`wasNormalized: true` because the raw text differs from the normalized form.
+
+**Why it didn't work:** SheetJS parses ` 200.00 ` in a numeric CSV column into
+the JS number `200`. By the time the differ sees it, `String(valA)` is already
+`"200"` and equals the normalized value — so `wasNormalized` is correctly
+false. The raw cell genuinely is numeric; the whitespace never survives parse.
+
+**What we tried instead:** Used a date column (`2024-02-10` vs `2024-03-11`),
+where SheetJS produces `Date` objects whose `String()` form differs from the
+normalized `YYYY-MM-DD`. The tag rendered as expected.
+
+**Side finding:** That same run exposed a real defect — date cells display as
+raw `Date.toString()` output in the report and both exports. Logged in
+PLAN.md, not fixed this session.
+
+**Status:** Resolved (test approach); defect it exposed is open
+
+**Tags:** sheetjs, normalization, dates, browser-verification, wasNormalized

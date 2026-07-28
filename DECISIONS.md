@@ -72,6 +72,11 @@ Each entry:
 - **Scope:** Deployment / release
 - **Do not:** Run `npx wrangler pages deploy` from the agent's non-interactive shell expecting it to work. To deploy, push code changes to `main` and let CI ship it. (A `.md`-only push won't trigger a deploy — that's intended.)
 
+### 2026-07-28 — Keep the deploy workflow on Node-24-native action versions
+- **Why:** `actions/checkout@v4` and `actions/setup-node@v4` target Node 20, which GitHub force-runs on Node 24 and annotates as deprecated on every deploy. v5 of both targets Node 24 directly. Build Node moved 22 → 24 in the same pass so CI matches the local toolchain; the bundle hash was byte-identical, so the runtime change is invisible to what ships.
+- **Scope:** `.github/workflows/deploy.yml`
+- **Do not:** Pin actions back to v4 to silence an unrelated failure — the Node 20 deprecation returns with it.
+
 ---
 
 ## Data & Schema
@@ -88,13 +93,19 @@ Each entry:
 
 ## Output Formats
 
-[Decisions about deliverable formats, structure, organization]
+### 2026-07-28 — The download must disclose everything the screen discloses
+- **Why:** The Excel Summary sheet writes `generateSummary()` verbatim, so any dishonest verdict on screen shipped in the downloadable report too — that is how the false "Files are identical" sentence reached Excel. When the UI gained a "formatting normalized" tag, both exports gained a `Normalized` column in the same commit so the artifact a CFO opens says what the browser said.
+- **Scope:** `src/lib/export.ts`, `src/components/`
+- **Do not:** Add a caveat, warning, or qualifier to the UI without checking whether the Excel and CSV exports carry it too.
 
 ---
 
 ## Writing & Voice
 
-[Voice, style, terminology decisions specific to this project]
+### 2026-07-28 — Never tell the user the files are "identical"
+- **Why:** Comparison is deliberately tolerant — whitespace, number formatting, and date formats are normalized away, rows are matched on key columns only, and duplicate/blank-key rows are excluded. The tool therefore cannot assert byte-identity, and "Files are identical. No differences found." was a claim it had no evidence for. Verdicts now state what was actually checked: "No material differences after tolerant matching." The same gate also reports column changes, which it previously ignored entirely.
+- **Scope:** `src/lib/summary-generator.ts` and any future verdict text
+- **Do not:** Reintroduce "identical," "no differences," or any absolute equality claim in a verdict. Scope every no-change sentence to what the comparison actually examined.
 
 ---
 

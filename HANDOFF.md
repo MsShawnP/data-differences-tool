@@ -9,6 +9,29 @@ For things that didn't work, see FAILURES.md.
 
 ---
 
+## 2026-07-28 18:00
+
+**Started from:** v1.1 polish arc, clean tree, app live. A Tier C review list
+arrived with 8 findings; PLAN.md task 7 already held the `it.fails`-pinned
+critical one.
+
+**Did:** Fixed 7 of 8 findings across 8 commits — identical-verdict column
+gate (un-pins both `it.fails` tests), tolerant-matching wording,
+`wasNormalized` surfaced on screen and in both exports, UTC date fallback,
+full-column type detection, footer color token, README/CLAUDE.md corrections.
+Pushed and verified live. Bumped CI to actions v5 + Node 24.
+
+**State:** 91 tests, tsc + build clean, tree clean, everything pushed and
+deployed (bundle `index-g1KV10e-.js` verified live). Untouched: money/currency
+product gap, blank-key matching question.
+
+**Next:** Fix date cells rendering as raw JS `Date` strings — a 2024-02-10 date
+displays as "Fri Feb 09 2024 19:00:00 GMT-0500" in RowChanges.tsx:95 and
+export.ts:38. Normalize to `YYYY-MM-DD` for display. Then decide whether to
+open a currency-totals arc.
+
+---
+
 ## 2026-07-28 15:56
 
 **What changed:** Fixed the Tier C review list — 6 commits: identical-verdict

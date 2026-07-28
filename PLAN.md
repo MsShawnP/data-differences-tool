@@ -72,6 +72,39 @@ has to come off. Do not remove a marker without doing the fix.
       `does not claim identical when a column was added but no row changed`,
       `leads with the column finding when rows match but columns changed`.
 
+### 8. Tier C review list — 2026-07-28
+
+Seven of eight findings fixed this session, one commit each.
+
+- [x] **[Critical]** Identical verdict ignores column changes (item 7 above).
+- [x] **[Medium]** "Files are identical" overclaims — now "No material
+      differences after tolerant matching." See DECISIONS.md.
+- [x] **[Medium]** `wasNormalized` rendered nowhere — now tagged in the
+      expanded row table and carried as a `Normalized` column in both exports.
+- [x] **[Medium]** `dayjs(str)` formatted the fallback date parse in local
+      time — now `dayjs.utc(str)`.
+- [x] **[Medium]** Test case for zero row changes with non-empty
+      `columnChanges` (plus three more).
+- [x] **[Low]** Column type inferred from at most 100 rows — now every row.
+- [x] **[Low]** Footer used London-40; now London-35, the footer token.
+- [x] **[Low]** README test count, CLAUDE.md "Primary language: TBD".
+- [ ] **[Product gap]** No figure is denominated in money and no column is
+      flagged as financial. Summing the numeric delta on detected currency
+      columns would close the largest CFO gap. NOT started — this is a
+      feature, out of scope for the v1.1 polish arc. Candidate for the
+      next arc.
+
+### 9. Found while verifying — date cells render as raw JS Date strings
+
+A ship date of 2024-02-10 displays as "Fri Feb 09 2024 19:00:00 GMT-0500" —
+wrong day, in a finance-facing report. The differ stores the raw cell value
+and both the UI and the exports call `String()` on it.
+
+- [ ] `src/components/RowChanges.tsx:95` (old/new value cells) and
+      `src/lib/export.ts:38` — format `Date` values as `YYYY-MM-DD` for
+      display. The normalizer already has the UTC extraction logic; the
+      display path never used it. Add a test for the export row content.
+
 ## Definition of done for this arc
 
 - [ ] Link preview in Slack/iMessage shows title + description (not blank)
