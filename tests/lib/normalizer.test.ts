@@ -87,6 +87,19 @@ describe("normalizeValue", () => {
     it("converts Excel date serial 45306 to 2024-01-15", () => {
       expect(normalizeValue(45306, dateColumn, defaultConfig)).toBe("2024-01-15");
     });
+
+    it("keeps a UTC timestamp on its UTC calendar date", () => {
+      // 02:00Z is the previous day in every negative-offset zone. Formatting in
+      // local time would return 2024-01-14 for a US-based user.
+      expect(normalizeValue("2024-01-15T02:00:00Z", dateColumn, defaultConfig)).toBe("2024-01-15");
+    });
+
+    it("keeps timestamps a day apart in UTC on different dates", () => {
+      const earlier = normalizeValue("2024-01-14T23:00:00Z", dateColumn, defaultConfig);
+      const later = normalizeValue("2024-01-15T23:00:00Z", dateColumn, defaultConfig);
+      expect(earlier).toBe("2024-01-14");
+      expect(later).toBe("2024-01-15");
+    });
   });
 
   describe("text columns", () => {

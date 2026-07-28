@@ -1,9 +1,11 @@
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import utc from "dayjs/plugin/utc";
 
 import type { ColumnMetadata, DiffConfig } from "@/types";
 
 dayjs.extend(customParseFormat);
+dayjs.extend(utc);
 
 const DATE_FORMATS = [
   "YYYY-MM-DD",
@@ -75,8 +77,12 @@ function normalizeDate(value: unknown): string {
     }
   }
 
-  // Fallback: try native Date parsing for ISO-like strings
-  const fallback = dayjs(str);
+  // Fallback: try native Date parsing for ISO-like strings. Parse and format
+  // in UTC — dayjs(str) resolves an instant, and formatting it in the browser's
+  // local zone shifts the calendar date. Under a negative offset, two
+  // timestamps a day apart in UTC could normalize to the same date and compare
+  // equal. This matches the Date-object branch above, which is already UTC.
+  const fallback = dayjs.utc(str);
   if (fallback.isValid()) {
     return fallback.format("YYYY-MM-DD");
   }
