@@ -37,7 +37,10 @@ Tier: Medium
 - HANDOFF.md — current session state
 - PLAN.md — current work arc
 - FAILURES.md — things tried that didn't work
-- docs/solutions/ — searchable solution docs (written by /ce:compound)
+- docs/solutions/ — documented solutions to past problems, one file per
+  problem, organized by category directory (logic-errors/, bugs/, …) with
+  YAML frontmatter (`module`, `tags`, `problem_type`) to search on. Relevant
+  when implementing or debugging in an area one of them covers.
 
 Read PLAN.md and HANDOFF.md at session start. DECISIONS.md and
 FAILURES.md as relevant.
