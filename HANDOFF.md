@@ -9,6 +9,30 @@ For things that didn't work, see FAILURES.md.
 
 ---
 
+## 2026-07-29 16:01 — /wrap
+
+**Started from:** The 18:56 stop point below, everything committed but two
+commits unpushed.
+
+**Did:** Confirmed the push and deploy landed between sessions — local HEAD =
+remote HEAD = `05d78be`, deploy run at 2026-07-28T23:18 succeeded. Verified the
+live bundle (`index-r-eoM4Oq.js`) contains both the identical-verdict fix
+("No row values changed") and the display fix (`getUTCHours`). Added a
+DECISIONS.md entry recording that display formatting is a separate concern from
+normalization.
+
+**State:** v1.1 polish arc effectively complete. Tree clean, 100 tests, tsc +
+build clean, all fixes live at diff.lailarallc.com. FAILURES.md and DECISIONS.md
+current. Nothing unpushed after this entry commits.
+
+**Next:** PLAN.md task 9 — east-of-UTC dates in the `Date`-object branch of
+`normalizeDate`. Last non-UTC-safe branch; display inherits its exposure by
+design, so fixing 9 moves screen/exports/summary together. Add a
+`TZ=Asia/Tokyo` case with the fix. Do NOT open the currency/money arc (task 8)
+without flagging — it is a feature, out of the v1.1 polish scope.
+
+---
+
 ## 2026-07-28 18:56 — STOPPED HERE
 
 **Started from:** The 18:00 wrap entry below. Session continued past it with a

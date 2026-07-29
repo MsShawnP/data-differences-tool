@@ -77,6 +77,11 @@ Each entry:
 - **Scope:** `.github/workflows/deploy.yml`
 - **Do not:** Pin actions back to v4 to silence an unrelated failure — the Node 20 deprecation returns with it.
 
+### 2026-07-28 — Display formatting is a separate concern from normalization
+- **Why:** `formatCellValue` (`src/lib/display.ts`) decides how one value *looks*; `normalizeValue` (`src/lib/normalizer.ts`) decides whether two values are *equal*. They must stay separate. If display reused the normalizer, the "formatting normalized" tag would point at a difference the reader can no longer see on screen — the tool would show two identical-looking cells and claim one was reformatted. `formatCellValue` is deliberately narrow: it converts `Date` objects to `YYYY-MM-DD` (or `YYYY-MM-DD HH:mm:ss` when a time is present) and passes everything else through as `String(value ?? "")`.
+- **Scope:** `src/lib/display.ts`, and its three call sites — `RowChanges.tsx`, `export.ts`, `summary-generator.ts`
+- **Do not:** Normalize values for display, or route display text through the normalizer. Two distinct instants must never render as the same string (that is why the time component is preserved rather than truncated).
+
 ---
 
 ## Data & Schema
