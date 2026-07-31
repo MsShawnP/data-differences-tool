@@ -31,6 +31,32 @@ quarto" or "scope, scrollytelling, decoration"]
 
 ## Entries
 
+### 2026-07-31 — Testing the decompression-bomb guard by round-tripping a huge-range XLSX hangs the writer
+
+**Attempted:** To test the new parser cell-count cap, built a worksheet with
+`XLSX.utils.aoa_to_sheet`, overrode `ws["!ref"]` to `"A1:XFD1048576"` (~17
+billion cells), wrote it with `XLSX.write`, wrapped the buffer in a `File`, and
+expected `parseFile` to reject it.
+
+**Why it didn't work:** `XLSX.write` iterates the *declared* range to emit
+cells, so the write side tried to materialize all 17 billion cells and froze —
+the test timed out at 120s and node had to be killed. The guard I was testing
+lives on the read side; the bomb never got there because the fixture couldn't
+be written in the first place.
+
+**What we tried instead:** Extracted the guard into a pure exported function
+`assertDeclaredCellsWithinLimit(range, fileName)` and tested it directly with a
+plain `{ s, e }` range object — no file, no XLSX round-trip, deterministic and
+instant. General lesson: to test a guard against pathological input, call the
+guard with the pathological *value*, don't try to manufacture a real artifact
+that carries it.
+
+**Status:** Resolved
+
+**Tags:** sheetjs, xlsx, testing, dos, decompression-bomb, fixtures, timeout
+
+---
+
 ### 2026-05-22 — Excel serial date offset wrong since initial build, masked by self-referencing tests
 
 **Attempted:** Used offset 25570 in `excelSerialToISO` to convert Excel date serial numbers to ISO date strings. Wrote tests that verified the output matched expectations.

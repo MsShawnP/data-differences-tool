@@ -9,6 +9,41 @@ For things that didn't work, see FAILURES.md.
 
 ---
 
+## 2026-07-31 17:35 — /wrap
+
+**Started from:** v1.1 arc complete, clean tree, 100 tests, all deployed. User
+asked for /improve + ce code review + UI review to confirm CEO/CFO-readiness,
+30-second clarity, and correctness of recent Claude Code work.
+
+**Did:** Ran 5 ce personas (correctness, maintainability, testing, TypeScript,
+security) + ui-review against the live site. Fixed every actionable finding in
+11 commits, one per item, tests after each:
+- **Correctness:** date-typed KEY columns rendered as raw JS Date strings on
+  screen + both exports (the sibling the `16537dd` fix missed — 3 key sites now
+  through `formatCellValue`); `wasNormalized` over-reported real cased changes
+  in case-insensitive mode; two all-blank columns scored as a rename; numeric
+  comma-strip collapsed `1,2,3`→123 (now strips only valid thousands
+  separators, shared helper); CSV lone-CR not quoted.
+- **Type safety:** removed 3 `as any` casts in differ.ts; `ColumnChange` →
+  discriminated union.
+- **Testing:** `exportToExcel` had zero tests + 2 false-confidence CSV tests
+  (blob.size>0 only) → real read-back assertions. 100→115 tests.
+- **Security:** decompression-bomb cell cap + long-header Levenshtein cap.
+- **UI:** darkened green/amber result tokens to WCAG AA (green 3.6→5.5:1, amber
+  2.3→4.7:1) using DS steps HK-25/SG-35; browser-verified. Added `review.yaml`.
+
+**State:** All 11 fixes pushed AND deployed — verified live (new tokens in the
+deployed CSS, old ones gone; deploy run all-green). 115 tests, tsc + build
+clean, tree clean, in sync with remote. Security posture strong (no
+Critical/High; CSV injection verified neutralized).
+
+**Next:** PLAN task 9 — east-of-UTC dates in the `Date`-object branch of
+`normalizeDate`, the last non-UTC-safe branch (display inherits its exposure by
+design). Do NOT open the currency/money arc (task 8) without flagging — it is a
+feature, out of v1.1 scope.
+
+---
+
 ## 2026-07-29 16:01 — /wrap
 
 **Started from:** The 18:56 stop point below, everything committed but two

@@ -88,11 +88,21 @@ Each entry:
 
 [Decisions about data sources, schemas, transformations]
 
+### 2026-07-31 — Numeric commas are stripped only when they are valid thousands separators
+- **Why:** `normalizeNumeric` and `valuesAreEqual` both removed every comma unconditionally, so `1,2,3` collapsed to `123` and compared equal to an unrelated `123` (and `1,23` to `123`) — a silent false "unchanged" in the core equality path. A value whose commas are not a valid thousands grouping now keeps them, so `Number()` yields `NaN` and it is compared as text instead of a fabricated number. Legitimate grouped numbers (`1,000`, `1,234,567.89`, `-1,000`, `$1,000`) are unaffected. Both call sites share one helper (`stripNumericFormatting`) so the two numeric paths cannot drift.
+- **Scope:** `src/lib/normalizer.ts` — `normalizeNumeric`, `valuesAreEqual`, `stripNumericFormatting`
+- **Do not:** Reintroduce an unconditional `.replace(/,/g, "")` on numeric input, or fix one of the two numeric paths without the other — they must agree or equal numbers report as changed (and vice-versa).
+
 ---
 
 ## Visualization
 
 [Chart conventions, palette decisions, interactivity choices]
+
+### 2026-07-31 — Semantic result colors use text-grade DS steps, not the data-fill defaults
+- **Why:** The Added/Modified/Removed numbers render as *text*, but the tokens used the design system's data-fill defaults — green Hong Kong-35 `#158f75` (3.6:1 on the warm canvas) and amber Singapore-55 `#ee8a2a` (2.3:1), both failing WCAG AA on a finance-facing report where the numbers are the message. Stepped each to the darkest text-grade stop in its own DS family that clears AA: green → HK-25 `#0e6e5a` (5.5:1), amber → SG-35 `#a05a1a` (4.7:1). Red-42 `#cc100a` already passed (5.1:1) and was left. All are documented DS steps — no palette invented.
+- **Scope:** `src/index.css` `--color-green` / `--color-amber`; any future semantic status color used as text
+- **Do not:** Use a DS data-fill default step (e.g. `-35`/`-55`) as text on the warm canvas or the `#f2f2f2` card without checking it clears 4.5:1; step down to the family's text-grade stop instead.
 
 ---
 
