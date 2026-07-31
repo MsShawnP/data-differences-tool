@@ -1,4 +1,4 @@
-import type { CellDiff, DiffConfig, DiffResult, ParsedFile, RowChange } from "@/types";
+import type { CellDiff, ColumnMetadata, DiffConfig, DiffResult, ParsedFile, RowChange } from "@/types";
 import { analyzeColumns, buildColumnChanges } from "@/lib/column-detector";
 import { valuesAreEqual, normalizeValue } from "@/lib/normalizer";
 
@@ -7,7 +7,7 @@ const KEY_SEPARATOR = "\x00";
 function buildCompositeKey(
   row: Record<string, unknown>,
   keyColumns: string[],
-  columnMeta: Map<string, { detectedType: string }>,
+  columnMeta: Map<string, ColumnMetadata>,
   config: DiffConfig
 ): string {
   return keyColumns
@@ -15,7 +15,7 @@ function buildCompositeKey(
       const val = row[col];
       if (val == null || val === "") return "";
       const meta = columnMeta.get(col) ?? { name: col, detectedType: "text" as const, index: 0 };
-      const normalized = normalizeValue(val, meta as any, config);
+      const normalized = normalizeValue(val, meta, config);
       return config.caseSensitive ? normalized : normalized.toLowerCase();
     })
     .join(KEY_SEPARATOR);
@@ -24,7 +24,7 @@ function buildCompositeKey(
 function buildRowIndex(
   rows: Record<string, unknown>[],
   keyColumns: string[],
-  columnMeta: Map<string, { detectedType: string }>,
+  columnMeta: Map<string, ColumnMetadata>,
   config: DiffConfig
 ): { index: Map<string, number>; duplicates: Map<string, number[]> } {
   const index = new Map<string, number>();
@@ -62,10 +62,10 @@ export function computeDiff(
   const colMetaMapB = new Map(fileB.columns.map((c) => [c.name, c]));
 
   const { index: indexA, duplicates: dupsA } = buildRowIndex(
-    fileA.rows, config.keyColumns, colMetaMapA as any, config
+    fileA.rows, config.keyColumns, colMetaMapA, config
   );
   const { index: indexB, duplicates: dupsB } = buildRowIndex(
-    fileB.rows, config.keyColumns, colMetaMapB as any, config
+    fileB.rows, config.keyColumns, colMetaMapB, config
   );
 
   // A key column the user picked from File A may not exist in File B (e.g. it
