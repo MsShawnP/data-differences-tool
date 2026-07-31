@@ -167,6 +167,44 @@ check again.
 
 <!-- Entries are added by /improve — don't delete this section -->
 
+### 2026-07-31 — Improvement pass (improve + ce code review + UI review)
+- **Trigger:** User-initiated combined review. Goal: confirm the tool is
+  CEO/CFO-ready, self-explanatory in 30s, and that recent Claude Code work is
+  correct (user reported quality concerns lately).
+- **What was reviewed:** 5 ce personas over src/ (correctness, maintainability,
+  testing, TypeScript, security) + ui-review-skill against the live site.
+  Baseline healthy: clean tree, 100 tests, tsc + build clean, in sync with remote.
+- **UI verdict:** Passes the 30-second executive test — headline, tagline,
+  concrete use cases, and the example-result card make the job obvious. Live
+  site renders on-brand (warm canvas, Playfair, Lailara footer). Most ui-review
+  FAILs were noise (checker measured `<body>`; credential/staleness hits were in
+  minified dist/ bundles) — tightened review.yaml so future runs are clean.
+- **What was fixed (11 commits):**
+  - **[correctness]** Date-typed KEY columns rendered as raw JS Date strings on
+    screen + both exports (RowChanges ×2, export.ts formatKey) — the same defect
+    16537dd fixed for cell values but scoped to the repro, not the surface. Now
+    routed through formatCellValue. +test.
+  - **[correctness]** `wasNormalized` tagged genuine cased text changes as
+    "formatting normalized" in case-insensitive mode. +test.
+  - **[correctness]** Two all-blank columns scored as a rename (jaccard 0/0→1). +test.
+  - **[correctness]** Numeric comma-strip collapsed "1,2,3"→123 (false match);
+    now strips only valid thousands separators, shared helper. +tests.
+  - **[correctness]** CSV lone-CR not quoted → row-boundary corruption. +tests.
+  - **[type-safety]** Removed 3 `as any` casts in differ.ts (typed metadata as
+    ColumnMetadata); modeled ColumnChange as a proper discriminated union.
+  - **[testing]** exportToExcel had ZERO tests + two false-confidence CSV tests
+    (asserted blob.size>0 only) — added real read-back assertions. 100→112.
+  - **[security]** Bounded decompression-bomb cell counts + long-header
+    Levenshtein cost (both self-DoS, tab-only). +tests. Final: 115 tests.
+  - **[UI]** Darkened green/amber result tokens to WCAG AA (green 3.6→5.5:1,
+    amber 2.3→4.7:1) using documented DS steps (HK-25, SG-35). Browser-verified.
+- **Security posture:** Strong. No Critical/High. CSV formula-injection
+  neutralization verified complete. No XSS/innerHTML/eval.
+- **Deferred / not touched:** SheetJS xlsx@0.18.5 CVEs (accepted, client-side);
+  east-of-UTC Date-object branch (PLAN task 9, still open); blank-key matching
+  (intentional). NOT pushed/deployed — local commits only, awaiting user.
+- **Next review:** 2026-08-30 (30 days; stable after this pass).
+
 ### 2026-07-27 — Improvement pass (improve + code review + UI review)
 - **Trigger:** User-initiated combined review; /improve audit was overdue (due 2026-06-19)
 - **What was reviewed:** Full src/ code review (background agent), security, UI/first-impression clarity, tests, git hygiene, deps. Baseline healthy: clean tree, 75 tests, TSC clean, no secrets, design system correct.
