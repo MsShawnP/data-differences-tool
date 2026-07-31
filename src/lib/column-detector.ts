@@ -47,7 +47,11 @@ function nameSimilarity(a: string, b: string): number {
 }
 
 function jaccardSimilarity(setA: Set<string>, setB: Set<string>): number {
-  if (setA.size === 0 && setB.size === 0) return 1;
+  // Two empty value-sets share no evidence of being the same column. Scoring
+  // them 1 (the naive 0/0 → identical reading) let two all-blank columns clear
+  // the rename threshold on name similarity alone and report a spurious rename.
+  // No content = no content signal = 0; a real rename still needs value overlap.
+  if (setA.size === 0 && setB.size === 0) return 0;
   let intersection = 0;
   for (const item of setA) {
     if (setB.has(item)) intersection++;

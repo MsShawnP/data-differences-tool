@@ -89,6 +89,25 @@ describe("analyzeColumns", () => {
     expect(result.added).toContain("category");
   });
 
+  it("does not rename two all-blank columns even when their names are similar", () => {
+    const fileA = makeParsedFile(["id", "notes_old"], [
+      { id: "1", notes_old: "" },
+      { id: "2", notes_old: "" },
+    ]);
+    const fileB = makeParsedFile(["id", "notes_new"], [
+      { id: "1", notes_new: "" },
+      { id: "2", notes_new: "" },
+    ]);
+
+    const result = analyzeColumns(fileA, fileB);
+
+    // No content evidence links the two columns; a name-only match must not
+    // clear the rename threshold. Honest result: one removed + one added.
+    expect(result.renamed).toHaveLength(0);
+    expect(result.removed).toContain("notes_old");
+    expect(result.added).toContain("notes_new");
+  });
+
   it("detects column reordering", () => {
     const fileA = makeParsedFile(["id", "name", "amount"], [
       { id: "1", name: "Alice", amount: "100" },
