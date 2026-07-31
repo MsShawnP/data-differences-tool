@@ -1,0 +1,40 @@
+project: data-differences-tool
+base_url: https://diff.lailarallc.com
+
+routes:
+  - path: /
+    name: Landing / Upload
+
+forbidden_content:
+  - pattern: "TODO|FIXME|HACK|XXX"
+    severity: warning
+    reason: Dev markers left in production code
+  - pattern: "password\\s*=|api_key\\s*=|secret\\s*="
+    severity: fail
+    reason: Possible hardcoded credentials
+    exclude:
+      - "*.md"
+      - "dist/*"
+      - "dist/**"
+      - "public/*"
+
+dom_checks:
+  - route: /
+    elements:
+      - selector: h1
+        label: Main heading present
+      - selector: "header p"
+        label: Tagline / value proposition present
+      - selector: "footer a[href='https://lailarallc.com']"
+        label: Lailara attribution link present
+    absent:
+      - selector: ".error-state"
+        label: No error state on load
+
+layout:
+  - route: /
+    checks:
+      - name: No horizontal scroll
+        assert: no_horizontal_scroll
+
+design_system: true

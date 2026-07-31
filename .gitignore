@@ -17,3 +17,6 @@ Thumbs.db
 *.key
 credentials.*
 secrets.*
+
+# ui-review-skill screenshot output
+screenshots/
