@@ -146,7 +146,18 @@ export function computeDiff(
       if (!valuesAreEqual(valA, valB, colMeta, config)) {
         const normalizedA = normalizeValue(valA, colMeta, config);
         const normalizedB = normalizeValue(valB, colMeta, config);
-        const wasNormalized = String(valA ?? "") !== normalizedA || String(valB ?? "") !== normalizedB;
+        // wasNormalized flags a reported difference where tolerant matching
+        // actually reshaped a value (whitespace, numeric, date formatting), so
+        // the reader knows the values were compared after normalizing. In
+        // case-insensitive mode normalizeValue lowercases as its last step, so
+        // fold the raw baseline the same way — otherwise every cased text change
+        // ("Active" → "Closed") trips the tag even though case had nothing to do
+        // with why the cells differ.
+        const foldRaw = (v: unknown) => {
+          const s = String(v ?? "");
+          return config.caseSensitive ? s : s.toLowerCase();
+        };
+        const wasNormalized = foldRaw(valA) !== normalizedA || foldRaw(valB) !== normalizedB;
 
         changes.push({
           column: nameA !== nameB ? `${nameA} → ${nameB}` : nameA,

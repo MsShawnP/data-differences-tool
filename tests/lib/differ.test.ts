@@ -60,6 +60,30 @@ describe("computeDiff", () => {
     expect(result.summary.unchangedCount).toBe(2);
   });
 
+  it("does not tag a genuine cased text change as formatting-normalized in case-insensitive mode", () => {
+    const fileA = makeParsedFile("a.csv", ["id", "status"], [
+      { id: "1", status: "Active" },
+      { id: "2", status: "  Pending  " },
+    ]);
+    const fileB = makeParsedFile("b.csv", ["id", "status"], [
+      { id: "1", status: "Closed" },
+      { id: "2", status: "Shipped" },
+    ]);
+
+    const result = computeDiff(fileA, fileB, { ...defaultConfig, caseSensitive: false });
+    const modified = result.rowChanges.filter((r) => r.type === "modified");
+
+    // "Active" → "Closed" is a real content change; case-folding is not why it
+    // differs, so the "formatting normalized" tag must NOT fire.
+    const statusChange = modified.find((r) => r.keyValues.id === "1");
+    expect(statusChange?.type === "modified" && statusChange.changes[0].wasNormalized).toBe(false);
+
+    // "  Pending  " → "Shipped" is a real change AND the old value carried
+    // whitespace that normalization stripped — the tag must still fire.
+    const whitespaceChange = modified.find((r) => r.keyValues.id === "2");
+    expect(whitespaceChange?.type === "modified" && whitespaceChange.changes[0].wasNormalized).toBe(true);
+  });
+
   it("detects added rows", () => {
     const fileA = makeParsedFile("a.csv", ["id", "name"], [
       { id: "1", name: "Alice" },
