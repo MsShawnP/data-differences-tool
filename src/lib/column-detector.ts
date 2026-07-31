@@ -40,9 +40,16 @@ function levenshteinDistance(a: string, b: string): number {
   return prev[n]!;
 }
 
+// Column headers longer than this are not plausible rename pairs. The cap also
+// bounds levenshteinDistance's O(m*n) cost: without it, a file with a few
+// very long, near-identical headers (each a single cell, well within the file
+// size limit) forces ~10^10 operations and freezes the tab.
+const MAX_HEADER_LENGTH_FOR_SIMILARITY = 200;
+
 function nameSimilarity(a: string, b: string): number {
   const maxLen = Math.max(a.length, b.length);
   if (maxLen === 0) return 1;
+  if (maxLen > MAX_HEADER_LENGTH_FOR_SIMILARITY) return 0;
   return 1 - levenshteinDistance(a.toLowerCase(), b.toLowerCase()) / maxLen;
 }
 

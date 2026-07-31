@@ -108,6 +108,29 @@ describe("analyzeColumns", () => {
     expect(result.added).toContain("notes_new");
   });
 
+  it("does not attempt a rename between pathologically long header names", () => {
+    // Two ~260-char, near-identical headers with identical values. Without the
+    // header-length guard, name+content similarity would clear the threshold
+    // (and levenshtein would run ~10^5 ops per pair); the guard skips the
+    // name comparison so these never register as a rename.
+    const longA = "col_" + "x".repeat(260);
+    const longB = "col_" + "x".repeat(259) + "y";
+    const fileA = makeParsedFile(["id", longA], [
+      { id: "1", [longA]: "shared" },
+      { id: "2", [longA]: "values" },
+    ]);
+    const fileB = makeParsedFile(["id", longB], [
+      { id: "1", [longB]: "shared" },
+      { id: "2", [longB]: "values" },
+    ]);
+
+    const result = analyzeColumns(fileA, fileB);
+
+    expect(result.renamed).toHaveLength(0);
+    expect(result.removed).toContain(longA);
+    expect(result.added).toContain(longB);
+  });
+
   it("detects column reordering", () => {
     const fileA = makeParsedFile(["id", "name", "amount"], [
       { id: "1", name: "Alice", amount: "100" },

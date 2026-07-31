@@ -3,6 +3,36 @@ import type { ColumnMetadata, ColumnType, ParsedFile } from "@/types";
 
 let XLSX: typeof XLSXTypes;
 
+// A worksheet's declared range can be enormous even in a small (zip-compressed)
+// file — a crafted "decompression bomb" .xlsx expands to hundreds of millions of
+// cells. detectColumns and sheet_to_json would materialize all of them and
+// freeze the tab. Reject any sheet whose declared range exceeds this before
+// touching a single cell. 100M comfortably clears any real reconciliation file
+// (the workflow's 200k-row cap with a normal column count is far below it) while
+// stopping the multi-billion-cell pathological case.
+const MAX_DECLARED_CELLS = 100_000_000;
+
+/**
+ * Throw if a worksheet's declared range would materialize more cells than we are
+ * willing to process. Exported so the bomb guard can be unit-tested without
+ * round-tripping a multi-gigacell workbook (which would freeze the writer too).
+ */
+export function assertDeclaredCellsWithinLimit(
+  range: XLSXTypes.Range,
+  fileName: string
+): void {
+  const declaredCells =
+    (range.e.r - range.s.r + 1) * (range.e.c - range.s.c + 1);
+  if (declaredCells > MAX_DECLARED_CELLS) {
+    throw new Error(
+      `File "${fileName}" is too large to process: it declares ` +
+        `${declaredCells.toLocaleString()} cells (limit ` +
+        `${MAX_DECLARED_CELLS.toLocaleString()}). This can indicate a corrupt ` +
+        `or maliciously crafted spreadsheet.`
+    );
+  }
+}
+
 async function getXLSX() {
   if (!XLSX) {
     XLSX = await import("xlsx");
@@ -35,7 +65,10 @@ export async function parseFile(file: File): Promise<ParsedFile> {
     throw new Error(`Could not read sheet "${sheetName}" from "${file.name}".`);
   }
 
-  const columns = detectColumns(sheet);
+  const range = XLSX.utils.decode_range(sheet["!ref"] ?? "A1");
+  assertDeclaredCellsWithinLimit(range, file.name);
+
+  const columns = detectColumns(sheet, range);
   const rows = XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet);
 
   return {
@@ -51,8 +84,10 @@ export async function parseFile(file: File): Promise<ParsedFile> {
  * Scans every data row, reading SheetJS cell `.t` properties to
  * determine each column's type (see resolveColumnType).
  */
-function detectColumns(sheet: XLSXTypes.WorkSheet): ColumnMetadata[] {
-  const range = XLSX.utils.decode_range(sheet["!ref"] ?? "A1");
+function detectColumns(
+  sheet: XLSXTypes.WorkSheet,
+  range: XLSXTypes.Range
+): ColumnMetadata[] {
   const columns: ColumnMetadata[] = [];
 
   // Mirror SheetJS's sheet_to_json header-key generation so each column's

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { parseFile } from "@/lib/parser";
+import { parseFile, assertDeclaredCellsWithinLimit } from "@/lib/parser";
 import { readFileSync } from "fs";
 import { resolve } from "path";
 
@@ -96,6 +96,22 @@ describe("parseFile", () => {
     // Both distinct keys are present on the row, so both columns compare.
     expect(result.rows[0]!["name"]).toBe("Alice");
     expect(result.rows[0]!["name_1"]).toBe("Smith");
+  });
+
+  it("rejects a declared range whose cell count is a decompression-bomb size", () => {
+    // A tiny (zip-compressed) file can declare an enormous used range; parsing
+    // it would materialize hundreds of millions of cells and freeze the tab.
+    // The full XFD1048576 grid is ~17 billion cells, far over the limit.
+    const bombRange = { s: { r: 0, c: 0 }, e: { r: 1_048_575, c: 16_383 } };
+    expect(() => assertDeclaredCellsWithinLimit(bombRange, "bomb.xlsx")).toThrow(
+      /too large to process/
+    );
+  });
+
+  it("accepts a declared range of ordinary size", () => {
+    // 1,000 rows x 50 columns = 50,000 cells — well within the limit.
+    const okRange = { s: { r: 0, c: 0 }, e: { r: 999, c: 49 } };
+    expect(() => assertDeclaredCellsWithinLimit(okRange, "ok.csv")).not.toThrow();
   });
 
   it("returns ParsedFile with zero rows and correct column names for headers-only file", async () => {
