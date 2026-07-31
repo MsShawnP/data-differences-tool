@@ -21,8 +21,15 @@
   /* Red-95: the sanctioned alert surface / error-banner fill. Red-42 (#cc100a)
      is ink only — text and 1px rules, never a background fill. */
   --color-red-surface: #fce8e7;
-  --color-green: #158f75;
-  --color-amber: #ee8a2a;
+  /* Hong Kong-25 (text grade). The DS default HK-35 #158f75 is a data-fill
+     step and only reaches 3.6:1 on the warm canvas; these tokens render as
+     TEXT (the Added/Modified counts and before/after values), so step down to
+     -25 which clears WCAG AA (~5.5:1). */
+  --color-green: #0e6e5a;
+  /* Singapore-35 (text grade). The DS default SG-55 #ee8a2a is a data-fill
+     step at only 2.3:1 as text; -35 is the lightest Singapore step that clears
+     AA (~4.7:1) while still reading as warm amber. */
+  --color-amber: #a05a1a;
 }
 
 /* Keyboard focus: visible navy outline for users navigating without a mouse. */
