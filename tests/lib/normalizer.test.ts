@@ -65,6 +65,17 @@ describe("normalizeValue", () => {
     it("strips commas in numeric strings", () => {
       expect(normalizeValue("1,234,567.89", numericColumn, defaultConfig)).toBe("1234567.89");
     });
+
+    it("strips a single thousands separator", () => {
+      expect(normalizeValue("1,000", numericColumn, defaultConfig)).toBe("1000");
+    });
+
+    it("does not collapse a value whose commas are not valid thousands separators", () => {
+      // "1,2,3" must NOT become 123; it is kept verbatim so it compares as text
+      // rather than falsely equalling an unrelated 123.
+      expect(normalizeValue("1,2,3", numericColumn, defaultConfig)).toBe("1,2,3");
+      expect(normalizeValue("1,23", numericColumn, defaultConfig)).toBe("1,23");
+    });
   });
 
   describe("date columns", () => {
@@ -162,6 +173,15 @@ describe("valuesAreEqual", () => {
 
     it("treats values outside tolerance as not equal", () => {
       expect(valuesAreEqual("100", "101", numericColumn, defaultConfig)).toBe(false);
+    });
+
+    it("treats a thousands-grouped number as equal to its bare form", () => {
+      expect(valuesAreEqual("1,000", "1000", numericColumn, defaultConfig)).toBe(true);
+    });
+
+    it("does not treat a malformed-comma value as equal to its digits-only form", () => {
+      // "1,2,3" is not 123; stripping every comma would have falsely matched.
+      expect(valuesAreEqual("1,2,3", "123", numericColumn, defaultConfig)).toBe(false);
     });
   });
 

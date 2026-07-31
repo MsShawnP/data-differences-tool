@@ -18,6 +18,23 @@ const DATE_FORMATS = [
 
 const CURRENCY_SYMBOLS = /[$€£]/g; // $, euro, pound
 
+// A number whose commas, if present, are valid thousands separators.
+const THOUSANDS_GROUPED = /^-?(\d{1,3}(,\d{3})+|\d+)(\.\d+)?$/;
+
+// Strip currency symbols and thousands separators down to bare numeric text.
+// Commas are removed only when they form valid thousands grouping; a malformed
+// value like "1,2,3" keeps its commas so Number() yields NaN and the value is
+// compared as text, instead of collapsing to 123 and falsely matching an
+// unrelated 123. Shared by normalizeNumeric and valuesAreEqual so the two
+// numeric paths cannot drift apart.
+function stripNumericFormatting(value: unknown): string {
+  const trimmed = String(value).trim().replace(CURRENCY_SYMBOLS, "");
+  if (trimmed.includes(",") && !THOUSANDS_GROUPED.test(trimmed)) {
+    return trimmed;
+  }
+  return trimmed.replace(/,/g, "");
+}
+
 // Excel epoch: Jan 0, 1900 = serial 1. JS epoch offset: 25569 days.
 const EXCEL_SERIAL_MIN = 1;
 const EXCEL_SERIAL_MAX = 2958465;
@@ -42,7 +59,7 @@ function excelSerialToISO(serial: number): string {
 function normalizeNumeric(value: unknown): string {
   if (value == null || value === "") return "";
 
-  const str = String(value).trim().replace(CURRENCY_SYMBOLS, "").replace(/,/g, "");
+  const str = stripNumericFormatting(value);
   const num = Number(str);
   if (Number.isNaN(num)) return String(value).trim();
   return String(num);
@@ -161,8 +178,8 @@ export function valuesAreEqual(
 
   // For numeric columns, compare with tolerance
   if (columnMeta.detectedType === "number") {
-    const aStr = String(a).trim().replace(CURRENCY_SYMBOLS, "").replace(/,/g, "");
-    const bStr = String(b).trim().replace(CURRENCY_SYMBOLS, "").replace(/,/g, "");
+    const aStr = stripNumericFormatting(a);
+    const bStr = stripNumericFormatting(b);
     const aNum = Number(aStr);
     const bNum = Number(bStr);
 
