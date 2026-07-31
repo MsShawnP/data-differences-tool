@@ -172,7 +172,15 @@ export function neutralizeFormula(value: string): string {
 
 export function escapeCsvField(value: string): string {
   const safe = neutralizeFormula(value);
-  if (safe.includes(",") || safe.includes('"') || safe.includes("\n")) {
+  // Rows are terminated with \r\n, so a lone \r (or \n) embedded in a value must
+  // be quoted too — otherwise a spreadsheet re-reading the file treats it as a
+  // record separator and shifts every following column.
+  if (
+    safe.includes(",") ||
+    safe.includes('"') ||
+    safe.includes("\n") ||
+    safe.includes("\r")
+  ) {
     return `"${safe.replace(/"/g, '""')}"`;
   }
   return safe;

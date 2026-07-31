@@ -209,4 +209,13 @@ describe("escapeCsvField — formula injection", () => {
   it("still quotes a neutralized field that also contains a comma", () => {
     expect(escapeCsvField("=A1,B1")).toBe('"\'=A1,B1"');
   });
+
+  it("quotes a field containing a lone carriage return", () => {
+    // A bare \r would otherwise break the row boundary when the CSV is reopened.
+    expect(escapeCsvField("line1\rline2")).toBe('"line1\rline2"');
+  });
+
+  it("quotes a field containing a newline", () => {
+    expect(escapeCsvField("line1\nline2")).toBe('"line1\nline2"');
+  });
 });
