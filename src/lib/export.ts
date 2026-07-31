@@ -54,7 +54,7 @@ function buildExportRows(result: DiffResult): ExportRow[] {
 }
 
 function formatKey(change: RowChange, keyColumns: string[]): string {
-  return keyColumns.map((col) => String(change.keyValues[col] ?? "")).join(" | ");
+  return keyColumns.map((col) => formatCellValue(change.keyValues[col])).join(" | ");
 }
 
 export async function exportToExcel(result: DiffResult): Promise<Blob> {

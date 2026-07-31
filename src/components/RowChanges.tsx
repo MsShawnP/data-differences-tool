@@ -60,7 +60,7 @@ export function RowChanges({ changes, keyColumns }: RowChangesProps) {
               const globalIdx = page * PAGE_SIZE + i;
               const isExpanded = expandedRows.has(globalIdx);
               const keyStr = keyColumns
-                .map((col) => `${col}: ${String(row.keyValues[col] ?? "")}`)
+                .map((col) => `${col}: ${formatCellValue(row.keyValues[col])}`)
                 .join(", ");
 
               return (
@@ -186,7 +186,7 @@ function ChangeSection({
       <div className="space-y-1">
         {pageRows.map((row, i) => {
           const keyStr = keyColumns
-            .map((col) => String(row.keyValues[col] ?? ""))
+            .map((col) => formatCellValue(row.keyValues[col]))
             .join(", ");
           return (
             <p key={page * PAGE_SIZE + i} className={`${borderWidth} ${borderColor} pl-3 text-sm text-text-primary`}>

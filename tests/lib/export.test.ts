@@ -118,6 +118,37 @@ describe("exportToCsv", () => {
     expect(lines[2]).toBe("2,Modified,status,open,closed,");
   });
 
+  it("renders a Date-typed key column as YYYY-MM-DD, not a raw JS Date string", async () => {
+    const result = makeDiffResult({
+      summary: {
+        totalRowsA: 1,
+        totalRowsB: 1,
+        addedCount: 0,
+        removedCount: 0,
+        modifiedCount: 1,
+        unchangedCount: 0,
+      },
+      keyColumnsUsed: ["ship_date"],
+      config: { keyColumns: ["ship_date"], caseSensitive: true, numericTolerance: 1e-9 },
+      rowChanges: [
+        {
+          type: "modified",
+          keyValues: { ship_date: new Date(Date.UTC(2024, 1, 10)) },
+          rowIndex: 0,
+          changes: [
+            { column: "amount", oldValue: "100", newValue: "200", wasNormalized: false },
+          ],
+        },
+      ],
+    });
+
+    const text = await exportToCsv(result).text();
+    const lines = text.trim().split("\r\n");
+
+    // The key cell must be the calendar date, never "Fri Feb 09 2024 19:00:00 GMT-0500".
+    expect(lines[1]).toBe("2024-02-10,Modified,amount,100,200,");
+  });
+
   it("properly escapes fields with commas and quotes", () => {
     const result = makeDiffResult({
       summary: {
