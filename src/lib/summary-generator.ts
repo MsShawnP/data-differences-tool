@@ -73,17 +73,14 @@ function describeColumnChanges(columnChanges: DiffResult["columnChanges"]): stri
   for (const change of columnChanges) {
     switch (change.type) {
       case "added":
-        if (change.columnName) added.push(change.columnName);
+        added.push(change.columnName);
         break;
       case "removed":
-        if (change.columnName) removed.push(change.columnName);
+        removed.push(change.columnName);
         break;
-      case "renamed": {
-        const oldName = change.details?.oldName;
-        const newName = change.details?.newName;
-        if (oldName && newName) renamed.push(`${oldName} → ${newName}`);
+      case "renamed":
+        renamed.push(`${change.oldName} → ${change.newName}`);
         break;
-      }
       case "reordered":
         reordered = true;
         break;

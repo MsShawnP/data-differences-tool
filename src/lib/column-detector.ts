@@ -167,12 +167,9 @@ export function buildColumnChanges(mapping: ColumnMapping): ColumnChange[] {
   for (const r of mapping.renamed) {
     changes.push({
       type: "renamed",
-      columnName: r.newName,
-      details: {
-        oldName: r.oldName,
-        newName: r.newName,
-        confidence: r.confidence,
-      },
+      oldName: r.oldName,
+      newName: r.newName,
+      confidence: r.confidence,
     });
   }
   if (mapping.reordered) {

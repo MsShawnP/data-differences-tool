@@ -22,17 +22,35 @@ export interface DiffConfig {
 
 export type ColumnChangeType = "added" | "removed" | "renamed" | "reordered";
 
-export interface ColumnChange {
-  type: ColumnChangeType;
-  columnName?: string;
-  details?: {
-    oldName?: string;
-    newName?: string;
-    oldIndex?: number;
-    newIndex?: number;
-    confidence?: number;
-  };
+// Discriminated on `type` so each variant carries exactly the payload it needs
+// and invalid states (a renamed change with no names, an added change with no
+// column) are unrepresentable rather than defended against at every read site.
+export interface AddedColumn {
+  type: "added";
+  columnName: string;
 }
+
+export interface RemovedColumn {
+  type: "removed";
+  columnName: string;
+}
+
+export interface RenamedColumn {
+  type: "renamed";
+  oldName: string;
+  newName: string;
+  confidence: number;
+}
+
+export interface ReorderedColumns {
+  type: "reordered";
+}
+
+export type ColumnChange =
+  | AddedColumn
+  | RemovedColumn
+  | RenamedColumn
+  | ReorderedColumns;
 
 export interface CellDiff {
   column: string;

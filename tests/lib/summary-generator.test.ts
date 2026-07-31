@@ -47,10 +47,7 @@ describe("generateSummary", () => {
     const result = makeDiffResult({
       columnChanges: [
         { type: "removed", columnName: "notes" },
-        {
-          type: "renamed",
-          details: { oldName: "qty", newName: "quantity", confidence: 0.9 },
-        },
+        { type: "renamed", oldName: "qty", newName: "quantity", confidence: 0.9 },
         { type: "reordered" },
       ],
     });

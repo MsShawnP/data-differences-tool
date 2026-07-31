@@ -17,13 +17,13 @@ export function ColumnChanges({ changes }: ColumnChangesProps) {
           <li key={i} className="flex items-center gap-2 text-sm">
             <ChangeTag type={change.type} />
             <span className="text-text-primary">
-              {change.type === "renamed" && change.details ? (
+              {change.type === "renamed" ? (
                 <>
-                  <span className="font-medium">{change.details.oldName}</span>
+                  <span className="font-medium">{change.oldName}</span>
                   {" → "}
-                  <span className="font-medium">{change.details.newName}</span>
+                  <span className="font-medium">{change.newName}</span>
                   <span className="ml-2 text-text-secondary">
-                    ({Math.round((change.details.confidence ?? 0) * 100)}% match)
+                    ({Math.round(change.confidence * 100)}% match)
                   </span>
                 </>
               ) : change.type === "reordered" ? (
