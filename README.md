@@ -35,7 +35,7 @@ Opens at http://localhost:5173
 npm test
 ```
 
-90 tests (Vitest) covering the parser, normalizer, column detector, differ, summary generator, and export.
+117 tests (Vitest) covering the parser, normalizer, column detector, differ, summary generator, export, a demo golden lock, and a browser-local (no-network) guarantee.
 
 **Deploy:**
 
@@ -50,7 +50,7 @@ Builds and deploys to Cloudflare Pages via Wrangler.
 - React 19 + TypeScript + Vite
 - Tailwind CSS v4
 - SheetJS (file parsing) + ExcelJS (styled export)
-- Vitest (90 tests)
+- Vitest (117 tests)
 - Deployed to Cloudflare Pages
 
 ## Project structure
