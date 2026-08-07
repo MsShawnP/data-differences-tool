@@ -1,0 +1,26 @@
+name: golden
+
+# Gates the demo golden lock: pins the committed demo dataset's computed diff so
+# the deployed demo output cannot drift during the client-mode conversion. Runs
+# ONLY the golden (tests/lib/demo-golden.test.ts) against the real differ engine —
+# base deps only (vitest via npm ci), never lailara_engagement.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  golden:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+      - name: Install dependencies
+        run: npm ci
+      - name: Demo golden lock
+        run: npx vitest run tests/lib/demo-golden.test.ts
